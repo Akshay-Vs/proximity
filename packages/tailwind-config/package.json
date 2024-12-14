@@ -1,0 +1,17 @@
+{
+	"name": "@proximity/tailwind-config",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"private": true,
+	"exports": {
+		".": "./tailwind.config.ts"
+	},
+	"devDependencies": {
+		"@proximity/typescript-config": "workspace:*",
+		"tailwindcss": "^3.4.16"
+	},
+	"keywords": [],
+	"author": "active-matrix",
+	"license": "MIT"
+}
