@@ -1,0 +1,25 @@
+{
+  "name": "@proximity/eslint-config",
+  "version": "0.0.1",
+  "private": true,
+  "files": [
+    "library.js",
+    "next.js",
+    "react-internal.js"
+  ],
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.0.0 || ^6.0.0",
+    "@typescript-eslint/parser": "^5.0.0 || ^6.0.0",
+    "@vercel/style-guide": "^5.2.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-turbo": "^2.0.0",
+    "eslint-plugin-only-warn": "^1.1.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "eslint-plugin-react-native": "^4.1.0",
+    "eslint": "^8",
+    "eslint-config-turbo": "latest",
+    "eslint-config-next": "latest"
+  }
+}
