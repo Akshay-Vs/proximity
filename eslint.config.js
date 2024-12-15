@@ -1,4 +1,3 @@
-import path from 'path';
 import js from '@eslint/js';
 import globals from 'globals';
 import reactRecommended from 'eslint-plugin-react/configs/recommended.js';
@@ -67,8 +66,8 @@ export default [
     },
     rules: {
       // TypeScript-specific rules
-      '@typescript-eslint/no-unused-vars': 'warn',
-      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': 'error',
+      '@typescript-eslint/no-explicit-any': 'error',
 
       // React specific rules
       'react/jsx-filename-extension': [1, {
