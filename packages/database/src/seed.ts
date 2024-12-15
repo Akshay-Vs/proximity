@@ -27,8 +27,8 @@ const DEFAULT_USERS = [
         })
       )
     );
-  } catch (error) {
-    console.error(error);
+  } catch {
+    // console.error(error);
     process.exit(1);
   } finally {
     await db.$disconnect();

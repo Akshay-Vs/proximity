@@ -1,31 +1,38 @@
 {
-  "name": "proximity",
-  "private": true,
-  "scripts": {
-    "dev": "turbo run dev",
-    "build": "turbo run build",
-    "test": "turbo run test",
-    "lint": "turbo run lint",
-    "clean": "turbo run clean && rm -rf node_modules",
-    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\" --ignore-path .gitignore",
-    "prepare": "husky"
-  },
-  "devDependencies": {
-    "@commitlint/config-conventional": "^19.5.0",
-    "@eslint/js": "^9.17.0",
-    "@types/node": "^22.10.2",
-    "eslint": "^9.17.0",
-    "eslint-plugin-react": "^7.37.2",
-    "globals": "^15.13.0",
-    "husky": "^9.1.7",
-    "lint-staged": "^15.2.11",
-    "prettier": "^3.4.2",
-    "turbo": "^2.3.3",
-    "typescript": "^5.7.2",
-    "typescript-eslint": "^8.18.0"
-  },
-  "engines": {
-    "node": ">=18"
-  },
-  "packageManager": "pnpm@9.12.0"
+	"name": "proximity",
+	"private": true,
+	"scripts": {
+		"dev": "turbo run dev",
+		"build": "turbo run build",
+		"test": "turbo run test",
+		"lint": "turbo run lint",
+		"clean": "turbo run clean && rm -rf node_modules",
+		"format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\" --ignore-path .gitignore",
+		"prepare": "husky"
+	},
+	"devDependencies": {
+		"@commitlint/config-conventional": "^19.5.0",
+		"@eslint/js": "^9.17.0",
+		"@types/node": "^22.10.2",
+		"@typescript-eslint/eslint-plugin": "^5.0.0 || ^6.0.0",
+		"@typescript-eslint/parser": "^5.0.0 || ^6.0.0",
+		"eslint": "^9.17.0",
+		"eslint-config-airbnb": "^19.0.4",
+		"eslint-import-resolver-typescript": "^3.7.0",
+		"eslint-plugin-import": "^2.31.0",
+		"eslint-plugin-jsx-a11y": "^6.10.2",
+		"eslint-plugin-react": "^7.37.2",
+		"eslint-plugin-react-hooks": "^5.1.0",
+		"globals": "^15.13.0",
+		"husky": "^9.1.7",
+		"lint-staged": "^15.2.11",
+		"prettier": "^3.4.2",
+		"turbo": "^2.3.3",
+		"typescript": "^5.7.2",
+		"typescript-eslint": "^8.18.0"
+	},
+	"engines": {
+		"node": ">=18"
+	},
+	"packageManager": "pnpm@9.12.0"
 }
