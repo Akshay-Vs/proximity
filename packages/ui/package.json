@@ -9,14 +9,27 @@
 	],
 	"exports": {
 		"./styles.css": "./dist/index.css",
-		"./react": "./src/react/index.ts",
-		"./shadcn/*": "./src/shadcn/*.tsx"
+		"./react": {
+			"import": "./dist/react/index.mjs",
+			"require": "./dist/react/index.cjs",
+			"types": "./dist/react/index.d.ts"
+		},
+		"./shadcn/*": {
+			"import": "./dist/shadcn/*.mjs",
+			"require": "./dist/shadcn/*.cjs",
+			"types": "./dist/shadcn/*.d.ts"
+		},
+		"./utils/cn": {
+			"import": "./dist/utils/cn.mjs",
+			"require": "./dist/utils/cn.cjs",
+			"types": "./dist/utils/cn.d.ts"
+		}
 	},
 	"license": "MIT",
 	"scripts": {
-		"build": "tailwindcss -i ./src/styles.css -o ./dist/index.css",
+		"build": "tsup",
 		"lint": "eslint src/",
-		"dev": "tailwindcss -i ./src/styles.css -o ./dist/index.css --watch",
+		"dev": "tsc watch.ts --outDir ./dist && node ./dist/watch.js",
 		"type-check": "tsc --noEmit"
 	},
 	"peerDependencies": {
@@ -25,17 +38,18 @@
 	"devDependencies": {
 		"@proximity/eslint-config": "workspace:*",
 		"@proximity/typescript-config": "workspace:*",
-		"@types/react": "^18.2.61",
-		"autoprefixer": "^10.4.18",
-		"postcss": "^8.4.35",
-		"tailwindcss": "^3.4.1",
-		"typescript": "5.5.4"
+		"@types/react": "^19.0.1",
+		"autoprefixer": "^10.4.20",
+		"postcss": "^8.4.49",
+		"tailwindcss": "^3.4.16",
+		"typescript": "5.7.2"
 	},
 	"dependencies": {
 		"@proximity/tailwind-config": "workspace:*",
 		"@radix-ui/react-separator": "^1.1.1",
 		"@radix-ui/react-slot": "^1.1.1",
 		"class-variance-authority": "^0.7.1",
+		"tsup": "^8.3.5",
 		"clsx": "^2.1.1",
 		"lucide-react": "^0.468.0",
 		"tailwind-merge": "^2.5.5",
