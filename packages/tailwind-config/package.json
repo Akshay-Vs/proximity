@@ -13,5 +13,8 @@
 	},
 	"keywords": [],
 	"author": "active-matrix",
-	"license": "MIT"
+	"license": "MIT",
+	"dependencies": {
+		"tailwindcss-animate": "^1.0.7"
+	}
 }
