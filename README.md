@@ -1,32 +1,16 @@
-# Turborepo react-native starter
+<h1 align='center'>Proximity</h1>
+<img src=".github/assets/images/proximity-mockup-1.png" alt="Proximity Mockup 1" width="100%" height="auto">
 
-This is an official starter Turborepo.
+<p align="center">
+  <u>
+    <img align="center" src="https://badgen.net/badge/license/MIT/white"/>&nbsp;
+    <img align="center" src="https://badgen.net/github/stars/Active-Matrix/proximity?color=white"/>&nbsp;
+    <img align="center" src="https://badgen.net/github/watchers/Active-Matrix/proximity?color=white"/>&nbsp;
+    <img align="center" src="https://badgen.net/github/forks/Active-Matrix/proximity?color=white"/>&nbsp;
+  </u>
 
-## Using this example
+Proximity is a cutting-edge news indexer, scraper, and TL;DR generator designed to keep you updated with the latest news from popular sources. By combining web scraping and AI-driven summarization, Proximity offers a fast, efficient, and concise way to consume news.
 
-Run the following command:
+## </p>
 
-```sh
-npx create-turbo@latest -e with-react-native-web
-```
-
-## What's inside?
-
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `native`: a [react-native](https://reactnative.dev/) app built with [expo](https://docs.expo.dev/)
-- `web`: a [Next.js](https://nextjs.org/) app built with [react-native-web](https://necolas.github.io/react-native-web/)
-- `@proximity/ui`: a stub [react-native](https://reactnative.dev/) component library shared by both `web` and `native` applications
-- `@proximity/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [Expo](https://docs.expo.dev/) for native development
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [Prettier](https://prettier.io) for code formatting
+see comtributors guide [here](github.com/Active-Matrix/proximity/blob/main/CONTRIBUTING.md)
