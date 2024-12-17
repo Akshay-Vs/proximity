@@ -3,8 +3,15 @@
 import type { Config } from "tailwindcss";
 import sharedConfig from "@proximity/tailwind-config";
 
-const config: Pick<Config, "content" | "presets"> = {
-  content: ["./app/**/*.tsx", "./components/**/*.ts", "./hooks/**/*.ts",],
+const config: Pick<Config, "content" | "presets" | "theme"> = {
+  content: ["./app/**/*.tsx", "./components/**/*.tsx", "./hooks/**/*.ts",],
+  theme: {
+    extends: {
+      fontFamily: {
+        jost: ["var(--font-jost-mono)"],
+      },
+    }
+  },
   presets: [sharedConfig],
 };
 
