@@ -2,16 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
+// global variables
+$background: #ebeced;
+$stroke: #919091;
+
+// debug mode
+// * {
+// 	outline: 3px solid rgb(0, 64, 255);
+// 	background: #ff646472;
+// }
+
 :root,
 html,
 body {
-	padding: 0%;
 	margin: 0;
+	padding: 0;
 	box-sizing: border-box;
-	font-family: Arial, Helvetica, sans-serif;
+	text-rendering: optimizeSpeed;
+	background-color: $background;
 }
 
 body {
-	min-height: 100vh;
-	min-width: 100vw;
+	font-family: Arial, Helvetica, sans-serif;
+	// min-height: 100vh;
+	// min-width: 100vw;
+}
+
+.center {
+	@apply flex justify-center items-center;
+}
+
+.col-center {
+	@apply flex justify-center items-center flex-col;
+}
+
+.col {
+	@apply flex flex-col;
+}
+
+.full {
+	@apply w-full h-full;
+}
+
+.screen {
+	@apply w-screen h-screen;
+}
+
+.gap-sm {
+	@apply gap-[1.375rem];
+}
+
+.gap-md {
+	@apply gap-[2.625rem];
+}
+
+.gap-xl {
+	@apply gap-[7.5rem];
+}
+
+.px-md {
+	@apply px-[2.625rem];
+}
+
+.bg-default {
+	@apply bg-[#f1efeb];
 }

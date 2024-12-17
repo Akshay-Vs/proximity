@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Geist, Jost } from 'next/font/google';
 
 import '@proximity/ui/styles.css';
 import './globals.scss';
@@ -9,8 +9,8 @@ const geistSans = Geist({
 	subsets: ['latin'],
 });
 
-const geistMono = Geist_Mono({
-	variable: '--font-geist-mono',
+const jost = Jost({
+	variable: '--font-jost-mono',
 	subsets: ['latin'],
 });
 
@@ -26,14 +26,12 @@ const RootLayout = ({
 }>) => {
 	return (
 		<html lang="en">
-			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-			>
+			<body className={`${geistSans.variable} ${jost.variable} antialiased`}>
 				{children}
 			</body>
 		</html>
 	);
-}
+};
 
 RootLayout.displayName = 'NextJSRootLayout';
 
