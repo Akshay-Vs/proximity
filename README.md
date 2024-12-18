@@ -13,4 +13,4 @@ Proximity is a cutting-edge news indexer, scraper, and TL;DR generator designed 
 
 ## </p>
 
-see comtributors guide [here](https://github.com/Active-Matrix/proximity/blob/main/CONTRIBUTING.md)
+see contributors guide [here](https://github.com/Active-Matrix/proximity/blob/main/CONTRIBUTING.md)
