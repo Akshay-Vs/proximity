@@ -19,7 +19,7 @@
 		"studio": "prisma studio"
 	},
 	"dependencies": {
-		"@prisma/client": "^6.0.1",
+		"@prisma/client": "^6.1.0",
 		"@proximity/env": "workspace:*"
 	},
 	"devDependencies": {
