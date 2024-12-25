@@ -4,7 +4,7 @@ interface FeaturedDescriptionProps {
 
 const FeaturedDescription = ({ description }: FeaturedDescriptionProps) => {
 	return (
-		<p className="text-base font-jost h-max-32 line-clamp-5">{description}</p>
+		<p className="text-base font-jost h-max-32 line-clamp-4">{description}</p>
 	);
 };
 

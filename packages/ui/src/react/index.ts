@@ -1,3 +1,7 @@
-import './card';
+import { Card } from './card';
+import { SearchInput } from './search';
 
-export * from './card';
+export {
+  Card,
+  SearchInput
+}

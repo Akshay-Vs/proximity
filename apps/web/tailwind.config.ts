@@ -7,6 +7,10 @@ const config: Pick<Config, "content" | "presets" | "theme"> = {
   content: ["./app/**/*.tsx", "./components/**/*.tsx", "./hooks/**/*.ts",],
   theme: {
     extends: {
+      colors: {
+        stroke: "#919091",
+        background: "var(--background)",
+      },
       fontFamily: {
         jost: ["var(--font-jost-mono)"],
       },
