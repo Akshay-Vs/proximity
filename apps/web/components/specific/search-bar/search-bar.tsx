@@ -2,7 +2,7 @@
 import { SearchInput } from '@proximity/ui/react';
 import { SearchIcon } from 'lucide-react';
 
-const Search = () => {
+const SearchBar = () => {
 	return (
 		<div className="main-container">
 			<SearchInput
@@ -21,4 +21,4 @@ const Search = () => {
 	);
 };
 
-export default Search;
+export default SearchBar;
