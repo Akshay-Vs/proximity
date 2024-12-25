@@ -5,6 +5,7 @@
 // global variables
 $background: #ebeced;
 $stroke: #919091;
+$text-secondary: #484848;
 
 // debug mode
 // * {
@@ -66,4 +67,8 @@ body {
 
 .bg-default {
 	@apply bg-[#f1efeb];
+}
+
+.main-container {
+	@apply w-full flex flex-col justify-center items-center gap-4 px-[5%];
 }
