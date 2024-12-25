@@ -9,9 +9,9 @@ export const useScreen = () => {
 		callback?.();
 	};
 
-	const setScreenWithCallbackAsync = <T>(screen: Screen, callback?: () => Promise<T>) => {
+	const setScreenWithCallbackAsync = async <T>(screen: Screen, callback?: () => Promise<T>) => {
 		setScreen(screen);
-		callback?.();
+		await callback?.();
 	};
 
 	return { screen, setScreen, setScreenWithCallback, setScreenWithCallbackAsync };
