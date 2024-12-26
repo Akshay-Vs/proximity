@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import '../styles/button.scss';
+
 // global variables
 $background: #ebeced;
 $stroke: #919091;
@@ -27,6 +29,28 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 	// min-height: 100vh;
 	// min-width: 100vw;
+}
+
+.horizontal-scroll::-webkit-scrollbar {
+	height: 0px;
+}
+
+.horizontal-scroll {
+	-ms-overflow-style: none;
+	-moz-scrollbar-width: none;
+	scrollbar-width: none;
+}
+
+::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #555;
 }
 
 .center {
@@ -70,5 +94,5 @@ body {
 }
 
 .main-container {
-	@apply w-full flex flex-col justify-center items-center gap-4 px-[5%];
+	@apply w-full flex justify-center items-center gap-4 px-[5%];
 }
