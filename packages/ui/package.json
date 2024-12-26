@@ -11,17 +11,14 @@
 		"./styles.css": "./dist/index.css",
 		"./react": {
 			"import": "./dist/react/index.mjs",
-			"require": "./dist/react/index.cjs",
 			"types": "./dist/react/index.d.ts"
 		},
 		"./shadcn/*": {
 			"import": "./dist/shadcn/*.mjs",
-			"require": "./dist/shadcn/*.cjs",
 			"types": "./dist/shadcn/*.d.ts"
 		},
 		"./utils/cn": {
 			"import": "./dist/utils/cn.mjs",
-			"require": "./dist/utils/cn.cjs",
 			"types": "./dist/utils/cn.d.ts"
 		}
 	},

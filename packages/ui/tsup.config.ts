@@ -5,7 +5,7 @@ import util from "util";
 const execAsync = util.promisify(exec);
 
 export default defineConfig((options: Options) => ({
-  entry: ["src/react/index.ts", "src/shadcn/**/*.{ts,tsx}"],
+  entry: ["src/react/index.ts", "src/shadcn/**/*.{ts,tsx}", "src/utils/cn.ts"],
   banner: {
     // js: "'use client'",
   },
