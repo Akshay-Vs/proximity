@@ -6,7 +6,7 @@ interface TagButtonEnhancedProps {
 
 const TagButtonEnhanced = ({ label }: TagButtonEnhancedProps) => {
 	return (
-		<Button variant="tag" className="h-12 px-7 center button__enhanced">
+		<Button variant="tag" className="h-11 px-7 center button__enhanced">
 			<div className="z-10 center gap-2">
 				<svg
 					fill="none"

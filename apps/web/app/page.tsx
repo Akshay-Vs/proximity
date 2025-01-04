@@ -8,7 +8,7 @@ import testArticle from '@/public/images/image 2.png';
 const Home = () => {
 	return (
 		<main className="w-full h-full flex flex-col gap-6 justify-center items-center">
-			<div className="w-full h-full flex flex-col gap-6 justify-center items-center pb-2">
+			<div className="w-full h-full flex flex-col gap-4 justify-center items-center pb-2">
 				<Header />
 				<Featured
 					title="Musk's $56bn deal rejected"

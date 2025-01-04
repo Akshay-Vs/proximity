@@ -80,12 +80,7 @@ export default [
       'react/react-in-jsx-scope': 'off',
 
       // Import and module rules
-      'import/extensions': ['error', 'ignorePackages', {
-        js: 'never',
-        jsx: 'never',
-        ts: 'never',
-        tsx: 'never'
-      }],
+      'import/extensions': 'off',
       'import/no-extraneous-dependencies': ['error', {
         devDependencies: [
           '**/*.test.{js,jsx,ts,tsx}',
@@ -118,7 +113,6 @@ export default [
       'no-console': 'warn',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
-      'import/extensions': 'off',
       "react/prop-types": "off"
     }
   }
