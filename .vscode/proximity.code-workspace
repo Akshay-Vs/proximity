@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"name": "✨ proximity",
+			"path": ".."
+		},
+		{
+			"name": "🚀 web",
+			"path": "../apps/web"
+		},
+		{
+			"name": "📦 @proximity/ui",
+			"path": "../packages/ui"
+		},
+		{
+			"name": "📦 @proximity/database",
+			"path": "../packages/database"
+		},
+		{
+			"name": "📦 @proximity/env",
+			"path": "../packages/env"
+		}
+	],
+	"settings": {}
+}

@@ -12,7 +12,7 @@ const FeaturedImage = ({ image }: FeaturedImageProps) => {
 			alt="Featured Image"
 			width={640}
 			height={360}
-			className="object-contain object-center w-40 h-fit h-max-32"
+			className="object-contain object-center w-36 h-24 rounded-2xl"
 		/>
 	);
 };

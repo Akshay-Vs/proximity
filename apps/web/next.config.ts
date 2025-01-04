@@ -5,6 +5,17 @@ const withSerwist = withSerwistInit({
   swDest: 'public/sw.js',
 });
 
-const nextConfig = {};
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        hostname: 'utfs.io',
+        port: '',
+        pathname: '/**',
+      },
+
+    ]
+  }
+};
 
 export default withSerwist(nextConfig);

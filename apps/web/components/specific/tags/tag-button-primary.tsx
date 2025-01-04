@@ -6,7 +6,7 @@ interface TagButtonPrimaryProps {
 
 const TagButtonPrimary = ({ label }: TagButtonPrimaryProps) => {
 	return (
-		<Button variant="tag" className="h-12 px-7">
+		<Button variant="tag" className="h-11 px-7">
 			{label}
 		</Button>
 	);

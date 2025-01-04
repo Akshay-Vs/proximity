@@ -1,8 +1,8 @@
+@use './button.scss';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import '../styles/button.scss';
 
 // global variables
 $background: #ebeced;
@@ -94,5 +94,5 @@ body {
 }
 
 .main-container {
-	@apply w-full flex justify-center items-center gap-4 px-[5%];
+	@apply w-full flex justify-center items-center gap-3 px-[5%];
 }

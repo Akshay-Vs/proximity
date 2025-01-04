@@ -1,8 +1,9 @@
 import { Geist, Jost } from 'next/font/google';
 
-import '@proximity/ui/styles.css';
-import './globals.scss';
 import { myMetadata, myViewport } from '@/pwa';
+
+import '@proximity/ui/styles.css';
+import '@/styles/globals.scss';
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
