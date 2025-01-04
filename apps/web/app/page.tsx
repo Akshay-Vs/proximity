@@ -1,5 +1,6 @@
 import Header from '@/components/specific/header/nav-header';
 import Featured from '@/components/specific/news/featured/featured';
+import NewsGrid from '@/components/specific/news/news-grid/news-grid';
 import SearchBar from '@/components/specific/search-bar/search-bar';
 import Tags from '@/components/specific/tags/tags';
 
@@ -19,6 +20,7 @@ const Home = () => {
 
 			<SearchBar />
 			<Tags />
+			<NewsGrid />
 		</main>
 	);
 };
