@@ -27,7 +27,7 @@ export class Scraper extends Browser {
     const extractedContent = await page.evaluate(() => {
       const content = document.querySelectorAll('p')
       const contentText = Array.from(content).map(p => p.textContent).join(' ')
-      return contentText.replace('\n', ' ').replace(/\s+/g, ' ').trim();
+      return contentText
     })
     const sanitisedContent = sanitise(extractedContent);
     return xss(sanitisedContent);

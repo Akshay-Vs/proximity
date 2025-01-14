@@ -62,10 +62,10 @@ async def generate(req: Request):
         return JSONResponse(content={"summary": formatted_response})
     except Exception as e:
         # Catch and return any errors during processing
+        print(e)
         return JSONResponse(
             status_code=500,
             content={
                 "error": "An error occurred while processing the request.",
-                "details": str(e),
             },
         )
