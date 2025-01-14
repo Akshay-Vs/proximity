@@ -6,11 +6,11 @@ import { Browser } from "./browser";
 import { sanitise } from "../libs/sanitise";
 import { validateResult } from "../libs/validate-result";
 import { findFirstTimeStamp } from "../libs/find-time-stamp";
+import URLParser from "@/libs/url-parser";
 
 export class Scraper extends Browser {
-
-  constructor(targetUrl: string) {
-    super(targetUrl);
+  constructor() {
+    super();
   }
 
   private async extractTitle(page: Page): Promise<string | null> {
@@ -33,7 +33,7 @@ export class Scraper extends Browser {
     return xss(sanitisedContent);
   }
 
-  private async extractImageUrl(page: Page): Promise<string | null> {
+  private async extractImageUrl(page: Page, url: URLParser): Promise<string | null> {
     console.log("Extracting image URL...");
     return page.evaluate(() => {
       const image = document.querySelector('img')
@@ -43,7 +43,7 @@ export class Scraper extends Browser {
       let formattedUrl = imageUrl;
 
       if (imageUrl.startsWith('/')) {
-        formattedUrl = this.url.getProtocol().concat(this.url.getHost().concat(imageUrl));
+        formattedUrl = url.getProtocol().concat(url.getHost().concat(imageUrl));
       }
       return formattedUrl.split('?')[0];
     })
@@ -59,29 +59,27 @@ export class Scraper extends Browser {
     return timestamp
   }
 
-  public async scrape(): Promise<z.infer<typeof validateResult> | null> {
-    const page = await this.openPage()
+  public async scrape(url: URLParser): Promise<z.infer<typeof validateResult> | null> {
+    const page = await this.openPage(url)
 
     const title = await this.extractTitle(page)
     const content = await this.extractContent(page)
-    const imageUrl = await this.extractImageUrl(page)
+    const imageUrl = await this.extractImageUrl(page, url)
     const date = await this.extractDate(page)
-    const sourceName = this.url.slice().split('.')[0]
+    const sourceName = url.slice().split('.')[0]
     const scrapedAt = new Date().toISOString()
 
-    // await this.closeBrowser()
+    await this.closePage(page)
 
     if (!title || !content || !imageUrl || !date) {
       throw new Error('Failed to scrape page')
     }
 
-    console.log(this.url.getURL())
-
     const validatedResult = validateResult.safeParse({
       title,
       imageUrl,
       sourceName,
-      sourceUrl: this.url.getURL(),
+      sourceUrl: url.getURL(),
       date: new Date(date).toISOString(),
       scrapedAt,
       content

@@ -21,6 +21,9 @@ fastify.register(
   fastifyCompress,
   { global: false }
 )
+
+const scraper = new Scraper();
+
 fastify.get('/', async (_request, _reply) => {
   return { "service": "scraper", "status": "running", "version": "0.0.1", "message": "I scrape the news" }
 })
@@ -42,8 +45,7 @@ fastify.post('/scrape', async (request, reply) => {
       return await reply.status(400).send({ error: 'Validation Error', message: validatedBody.error.message });
     }
 
-    const scraper = new Scraper(validatedBody.data.url);
-    const result = await scraper.scrape();
+    const result = await scraper.scrape(new URLParser(validatedBody.data.url));
     return result;
   }
   catch (error) {
