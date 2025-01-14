@@ -9,7 +9,7 @@ export const sanitise = (str: string): string => {
   str = str.replace(/[\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, ''); // Misc symbols
 
   // Remove special symbols like ©, ®, ™, and others
-  str = str.replace(/[©®™✓☑️♻️☆★⚡]/g, '');
+  str = str.replace(/[©®™✓♻️☆★⚡]|☑️/g, '');
 
   // Remove any non-alphanumeric characters except spaces
   str = str.replace(/[^a-zA-Z0-9\s]/g, '');

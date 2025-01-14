@@ -34,7 +34,7 @@ const findFirstRelativeDate = (content: string): string | null => {
     const unit = match[2].toLowerCase();
 
     const now = new Date();
-    let publishedDate = new Date();
+    const publishedDate = new Date();
 
     if (unit.startsWith("hour") || unit.startsWith("hr")) {
       publishedDate.setHours(now.getHours() - quantity);
