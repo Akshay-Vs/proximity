@@ -28,8 +28,8 @@ The **Scraper Service** is a lightweight and efficient Fastify-based server desi
 1. Clone the repository:
 
    ```bash
-   git clone <repository_url>
-   cd scraper-service
+   git clone git@github.com:Active-Matrix/proximity.git
+   cd services/scraper
    ```
 
 2. Install dependencies:
@@ -137,14 +137,6 @@ Start the development server:
 
 ```bash
 npm run dev
-```
-
-### Testing
-
-Run unit tests (if available):
-
-```bash
-npm test
 ```
 
 ---
