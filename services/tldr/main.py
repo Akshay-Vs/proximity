@@ -23,19 +23,21 @@ model = llm.LLM(
     n_batch=1024,
     temperature=0.3,
     model_path="./models/Llama-3.2-1B-Instruct-Q4_K_M.gguf",
-    system_prompt='''
+    system_prompt="""
     You are an excellent text summarizer. Your task is to create a TL;DR news summary that encapsulates the essential details from a web-scraped article. The summary should be informative, clear, and concise, fitting into a single paragraph.
 
     Output Format:
     Output format must be in JSON format: heading: {{Summarized Title}}, content:{{A brief and concise summary under 100 words}}
     Note: Do not generate additional text including 'Here is the summary', 'Here is the TL;DR summary', 'Here is the TL;DR'. 
     Input: (The web-scraped text data)
-    '''
+    """,
 )
+
 
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the Summarization API"}
+
 
 @app.post("/generate")
 async def generate(req: Request):
@@ -62,5 +64,8 @@ async def generate(req: Request):
         # Catch and return any errors during processing
         return JSONResponse(
             status_code=500,
-            content={"error": "An error occurred while processing the request.", "details": str(e)},
+            content={
+                "error": "An error occurred while processing the request.",
+                "details": str(e),
+            },
         )

@@ -59,9 +59,7 @@ class LLM:
 
     def _setup_cuda(self):
         try:
-            subprocess.run(
-                ["CMAKE_ARGS=-DGGML_CUDA=on"], shell=True, check=True
-            )
+            subprocess.run(["CMAKE_ARGS=-DGGML_CUDA=on"], shell=True, check=True)
             print("CUDA is installed and configured.")
         except subprocess.CalledProcessError:
             print("Error configuring CUDA. Ensure CUDA is installed properly.")
@@ -74,7 +72,10 @@ class LLM:
         """
         print(f"Generating response...")
         return self.agent.get_chat_response(
-            prompt, returns_streaming_generator=True, print_output=False, llm_sampling_settings=self.settings,
+            prompt,
+            returns_streaming_generator=True,
+            print_output=False,
+            llm_sampling_settings=self.settings,
         )
 
     def format_response(self, response):
