@@ -4,6 +4,8 @@ import fastifyRateLimit from '@fastify/rate-limit'
 import z from 'zod'
 
 import { Scraper } from './scraper'
+import { TRUSTED_SOURCES } from '../libs/trusted-sources'
+import URLParser from '../libs/url-parser'
 
 export const fastify = Fastify({
   logger: true
@@ -25,14 +27,19 @@ fastify.get('/', async (_request, _reply) => {
 
 fastify.post('/scrape', async (request, reply) => {
   const bodySchema = z.object({
-    url: z.string().url(),
+    url: z.string().url().refine(url => {
+      const host = new URLParser(url);
+      return TRUSTED_SOURCES.includes(host.slice());
+    }, {
+      message: 'URL must be from a trusted source',
+    }),
   });
 
   try {
     const validatedBody = bodySchema.safeParse(request.body);
 
     if (!validatedBody || !validatedBody.success) {
-      return await reply.status(400).send({ error: 'Invalid request body' });
+      return await reply.status(400).send({ error: 'Validation Error', message: validatedBody.error.message });
     }
 
     const scraper = new Scraper(validatedBody.data.url);
