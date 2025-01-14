@@ -2,7 +2,8 @@ export type ScrapeResult = {
   title: string;
   content: string;
   imageUrl: string;
-  source: string;
+  sourceName: string;
+  sourceUrl: string;
   date: Date;
   scrappedAt: Date;
 }

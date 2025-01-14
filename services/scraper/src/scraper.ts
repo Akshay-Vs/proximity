@@ -1,4 +1,5 @@
 import { Page } from "puppeteer";
+
 import { Browser } from "./browser";
 import { ScrapeResult } from "@/types/scrape-result";
 
@@ -13,8 +14,7 @@ export class Scraper extends Browser {
     return page.evaluate(() => {
       const heading = document.querySelector('h1')
       const title = heading?.textContent
-      console.log("title", title)
-      return title ?? null;
+      return title?.replace('\n', '').trim() || null;
     })
   }
 
@@ -23,8 +23,7 @@ export class Scraper extends Browser {
     return page.evaluate(() => {
       const content = document.querySelectorAll('p')
       const contentText = Array.from(content).map(p => p.textContent).join(' ')
-      console.log("contentText", contentText)
-      return contentText;
+      return contentText.replace('\n', ' ').replace(/\s+/g, ' ').trim();
     })
   }
 
@@ -33,8 +32,14 @@ export class Scraper extends Browser {
     return page.evaluate(() => {
       const image = document.querySelector('img')
       const imageUrl = image?.getAttribute('src')
-      console.log("imageUrl", imageUrl)
-      return imageUrl ?? null;
+      if (!imageUrl) return null;
+
+      let formattedUrl = imageUrl;
+
+      if (imageUrl.startsWith('/')) {
+        formattedUrl = this.url.getProtocol().concat(this.url.getHost().concat(imageUrl));
+      }
+      return formattedUrl.split('?')[0];
     })
   }
 
@@ -62,14 +67,12 @@ export class Scraper extends Browser {
 
       const findFirstDate = (content: string): string | null => {
         const match = regex.exec(content);
-        console.log("match", match)
         return match ? match[0] : null;
       }
 
       const pageContent = document.body.textContent || ''; // Get page content
       const firstMatchedDate = findFirstDate(pageContent);
 
-      console.log("firstMatchedDate", firstMatchedDate)
       return firstMatchedDate;
 
     })
@@ -82,7 +85,7 @@ export class Scraper extends Browser {
     const content = await this.extractContent(page)
     const imageUrl = await this.extractImageUrl(page)
     const date = await this.extractDate(page)
-    const source = this.url.getHost()
+    const sourceName = this.url.getHost().split('.').slice(-2).join('.')
     const scrappedAt = new Date()
 
     await this.closeBrowser()
@@ -93,11 +96,12 @@ export class Scraper extends Browser {
 
     return {
       title,
-      content,
       imageUrl,
-      source,
+      sourceName,
+      sourceUrl: this.url.getURL(),
       date: new Date(date),
-      scrappedAt
+      scrappedAt,
+      content
     }
   }
 
