@@ -1,7 +1,10 @@
 import { Page } from "puppeteer";
+import xss from 'xss';
+import z from "zod";
 
 import { Browser } from "./browser";
-import { ScrapeResult } from "@/types/scrape-result";
+import { sanitise } from "../libs/sanitise";
+import { validateResult } from "../libs/validate-result";
 
 export class Scraper extends Browser {
 
@@ -20,11 +23,13 @@ export class Scraper extends Browser {
 
   private async extractContent(page: Page): Promise<string> {
     console.log("Extracting content...");
-    return page.evaluate(() => {
+    const extractedContent = await page.evaluate(() => {
       const content = document.querySelectorAll('p')
       const contentText = Array.from(content).map(p => p.textContent).join(' ')
       return contentText.replace('\n', ' ').replace(/\s+/g, ' ').trim();
     })
+    const sanitisedContent = sanitise(extractedContent);
+    return xss(sanitisedContent);
   }
 
   private async extractImageUrl(page: Page): Promise<string | null> {
@@ -78,7 +83,7 @@ export class Scraper extends Browser {
     })
   }
 
-  public async scrape(): Promise<ScrapeResult | null> {
+  public async scrape(): Promise<z.infer<typeof validateResult> | null> {
     const page = await this.openPage()
 
     const title = await this.extractTitle(page)
@@ -86,22 +91,34 @@ export class Scraper extends Browser {
     const imageUrl = await this.extractImageUrl(page)
     const date = await this.extractDate(page)
     const sourceName = this.url.getHost().split('.').slice(-2).join('.')
-    const scrappedAt = new Date()
+    const scrapedAt = new Date().toISOString()
 
-    await this.closeBrowser()
+    // await this.closeBrowser()
 
     if (!title || !content || !imageUrl || !date) {
-      return null
+      throw new Error('Failed to scrape page')
     }
 
-    return {
+    console.log(this.url.getURL())
+
+    const validatedResult = validateResult.safeParse({
       title,
       imageUrl,
       sourceName,
       sourceUrl: this.url.getURL(),
-      date: new Date(date),
-      scrappedAt,
+      date: new Date(date).toISOString(),
+      scrapedAt,
       content
+    });
+
+    if (!validatedResult.success) {
+      console.error(validatedResult.error);
+      throw new Error('Failed to validate result')
+    }
+
+
+    return {
+      ...validatedResult.data,
     }
   }
 
