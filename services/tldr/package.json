@@ -1,0 +1,15 @@
+{
+	"name": "tldr-generator-service",
+	"version": "1.0.0",
+	"description": "Generate news TL;DR using Llama3.2 1B Instruct model",
+	"main": "main.py",
+	"author": "Active-Matrix",
+	"license": "MIT",
+	"scripts": {
+		"start": "uvicorn main:app --reload --port 8000",
+		"dev": "fastapi dev main.py",
+		"test": "pytest",
+		"install": "echo 'Setting up python venv...\n' && python3 -m venv venv || true && source venv/bin/activate && python3 -m pip install --upgrade pip",
+		"postinstall": "echo 'Setting up Llama3...\n' && python setup.py install"
+	}
+}
