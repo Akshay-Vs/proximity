@@ -1,14 +1,6 @@
 import { Page } from "puppeteer";
 import { Browser } from "./browser";
-
-type ScrapeResult = {
-  title: string;
-  content: string;
-  imageUrl: string;
-  source: string;
-  date: Date;
-  scrappedAt: Date;
-}
+import { ScrapeResult } from "@/types/scrape-result";
 
 export class Scraper extends Browser {
 

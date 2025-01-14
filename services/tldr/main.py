@@ -28,7 +28,7 @@ model = llm.LLM(
 
     Output Format:
     Output format must be in JSON format: heading: {{Summarized Title}}, content:{{A brief and concise summary under 100 words}}
-    Note: Do not generate additional text including 'Here is the summary', 'Here is the TL;DR summary', 'Here is the TL;DR'. 
+    Note: Do not generate additional text including 'Here is the summary', 'Here is the TL;DR summary', 'Here is the TL;DR'. Output length should be between than 100 and 150 words.
     Input: (The web-scraped text data)
     """,
 )
