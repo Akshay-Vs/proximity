@@ -289,6 +289,10 @@ importers:
         specifier: 5.7.2
         version: 5.7.2
 
+  services/scraper: {}
+
+  services/tldr: {}
+
 packages:
 
   '@alloc/quick-lru@5.2.0':
