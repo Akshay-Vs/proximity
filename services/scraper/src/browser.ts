@@ -1,18 +1,21 @@
+import URLParser from "@/libs/url-parser";
 import puppeteer, { Browser as Engine, Page } from "puppeteer";
-import URLParser from "../libs/url-parser";
 
 export class Browser {
   protected browser: Engine | null = null;
-  protected url: URLParser;
 
-  constructor(url: string) {
-    this.url = new URLParser(url);
+  constructor() {
+    this.launchBrowser()
   }
+
 
   protected async launchBrowser(): Promise<void> {
     this.browser = await puppeteer.launch({
-      headless: true, // Disable headless mode to preview the browser
-      args: ['--start-maximized'], // Maximize the browser window
+      headless: true,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox'
+      ],
     });
     console.log("Browser launched");
   }
@@ -29,8 +32,7 @@ export class Browser {
     return this.browser.newPage();
   }
 
-  protected async openPage(): Promise<Page> {
-    await this.launchBrowser();
+  protected async openPage(url: URLParser): Promise<Page> {
     const page = await this.createPage();
 
     // Add anti-detection measures
@@ -46,7 +48,7 @@ export class Browser {
       'Accept-Language': 'en-US,en;q=0.9',
     });
 
-    await page.goto(this.url.getURL(), { waitUntil: 'networkidle2', timeout: 60000 });
+    await page.goto(url.getURL(), { waitUntil: 'networkidle2', timeout: 60000 });
 
     await page.waitForSelector('h1', { timeout: 10000 });
 
@@ -55,6 +57,10 @@ export class Browser {
 
     console.log("Page opened successfully");
     return page;
+  }
+
+  protected async closePage(page: Page): Promise<void> {
+    await page.close();
   }
 
 }

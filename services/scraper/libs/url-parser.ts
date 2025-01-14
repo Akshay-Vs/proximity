@@ -30,8 +30,18 @@ export default class URLParser {
     return this.url.href;
   }
 
-  protected removeTrailingSlash(url: string): string {
+  public removeTrailingSlash(url: string): string {
     return url.endsWith('/') ? url.slice(0, -1) : url;
+  }
+
+  public slice(number = -2): string {
+    if (number > 0) throw new Error('Slice number must be negative');
+    const parts = this.url.host.split('.');
+    if (Math.abs(number) >= parts.length) {
+      throw new Error('Slice number exceeds domain parts length');
+    }
+    return parts.slice(number).join('.');
+
   }
 
   protected validateUrl(url: string): URL {

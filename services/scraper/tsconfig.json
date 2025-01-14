@@ -2,6 +2,7 @@
 	"extends": "@proximity/typescript-config/base.json",
 	"compilerOptions": {
 		"module": "Node16",
+		"target": "ES6",
 		"moduleResolution": "node16",
 		"baseUrl": ".",
 		"paths": {
