@@ -5,6 +5,7 @@ import z from "zod";
 import { Browser } from "./browser";
 import { sanitise } from "../libs/sanitise";
 import { validateResult } from "../libs/validate-result";
+import { findFirstTimeStamp } from "../libs/find-time-stamp";
 
 export class Scraper extends Browser {
 
@@ -48,39 +49,14 @@ export class Scraper extends Browser {
     })
   }
 
-  private async extractDate(page: Page): Promise<string | null> {
+  private async extractDate(page: Page): Promise<string> {
     console.log("Extracting date...");
-    return page.evaluate(() => {
-      // Combine the regex patterns into a single pattern using OR (`|`)
-      const datePattern = [
-        // Matches 12-12-2024
-        "\\d{2}-\\d{2}-\\d{4}",
-        // Matches 12/12/2024
-        "[0-9]{2}/{1}[0-9]{2}/{1}[0-9]{4}",
-        // Matches 12-January-2024
-        "\\d{1,2}-(January|February|March|April|May|June|July|August|September|October|November|December)-\\d{4}",
-        // Matches 2024-12-12
-        "\\d{4}-\\d{1,2}-\\d{1,2}",
-        // Matches 12 January 2024
-        "[0-9]{1,2}\\s(January|February|March|April|May|June|July|August|September|October|November|December)\\s\\d{4}",
-        // Matches 12-12-2024
-        "\\d{1,2}-\\d{1,2}-\\d{4}"
-      ].join("|");
-
-      // single RegExp object
-      const regex = new RegExp(datePattern, 'g');
-
-      const findFirstDate = (content: string): string | null => {
-        const match = regex.exec(content);
-        return match ? match[0] : null;
-      }
-
-      const pageContent = document.body.textContent || ''; // Get page content
-      const firstMatchedDate = findFirstDate(pageContent);
-
-      return firstMatchedDate;
-
+    const pageData = page.evaluate(() => {
+      return document.body.textContent || ''; // Get page content
     })
+
+    const timestamp = await findFirstTimeStamp(pageData)
+    return timestamp
   }
 
   public async scrape(): Promise<z.infer<typeof validateResult> | null> {
@@ -90,7 +66,7 @@ export class Scraper extends Browser {
     const content = await this.extractContent(page)
     const imageUrl = await this.extractImageUrl(page)
     const date = await this.extractDate(page)
-    const sourceName = this.url.getHost().split('.').slice(-2).join('.')
+    const sourceName = this.url.slice().split('.')[0]
     const scrapedAt = new Date().toISOString()
 
     // await this.closeBrowser()
