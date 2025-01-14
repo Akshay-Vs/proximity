@@ -1,4 +1,4 @@
-<h1 align='center'>Proximity</h1>
+<h1 align='center'>Proximity (Under development)</h1>
 <img src=".github/assets/images/proximity-mockup-1.png" alt="Proximity Mockup 1" width="100%" height="auto">
 
 <p align="center">
