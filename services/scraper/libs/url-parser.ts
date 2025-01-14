@@ -30,8 +30,12 @@ export default class URLParser {
     return this.url.href;
   }
 
-  protected removeTrailingSlash(url: string): string {
+  public removeTrailingSlash(url: string): string {
     return url.endsWith('/') ? url.slice(0, -1) : url;
+  }
+
+  public slice(number = -2): string {
+    return this.url.host.split('.').slice(number).join('.');
   }
 
   protected validateUrl(url: string): URL {
