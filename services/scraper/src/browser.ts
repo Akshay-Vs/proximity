@@ -11,8 +11,11 @@ export class Browser {
 
   protected async launchBrowser(): Promise<void> {
     this.browser = await puppeteer.launch({
-      headless: true, // Disable headless mode to preview the browser
-      args: ['--start-maximized'], // Maximize the browser window
+      headless: false,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox'
+      ],
     });
     console.log("Browser launched");
   }
