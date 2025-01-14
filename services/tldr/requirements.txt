@@ -1,2 +1,3 @@
 huggingface_hub[cli]==0.27.1
 llama_cpp_agent==0.2.35
+fastapi[standard]==0.115.6
