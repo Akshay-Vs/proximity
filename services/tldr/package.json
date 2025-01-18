@@ -8,7 +8,7 @@
 	"scripts": {
 		"start": "uvicorn main:app --reload --port 8000",
 		"lint": "black .",
-		"install": "python -m venv venv && venv/bin/python -m pip install --upgrade pip",
-		"postinstall": "echo 'Setting up Llama3...\n' && python setup.py install"
+		"pip-install": "python -m pip install --upgrade pip",
+		"pip-setup": "echo 'Setting up Llama3...\n' && python setup.py install"
 	}
 }

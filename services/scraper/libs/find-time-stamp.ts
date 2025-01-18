@@ -49,7 +49,7 @@ const findFirstRelativeDate = (content: string): string | null => {
   return null;
 };
 
-export const findFirstTimeStamp = async (pageContent: Promise<string>): Promise<string> => {
+export const findFirstTimeStamp = async (pageContent: Promise<string> | string): Promise<string> => {
   const content = await pageContent;
   const absoluteDate = findFirstAbsoluteDate(content);
   if (absoluteDate)
