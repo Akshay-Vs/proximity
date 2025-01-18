@@ -2,13 +2,13 @@ import { Page } from "puppeteer";
 import xss from 'xss';
 import z from "zod";
 
-import { Browser } from "./browser";
-import { sanitise } from "../libs/sanitise";
-import { validateResult } from "../libs/validate-result";
-import { findFirstTimeStamp } from "../libs/find-time-stamp";
+import { Browser } from "../browser";
+import { sanitise } from "../../libs/sanitise";
+import { validateResult } from "../../libs/validate-result";
+import { findFirstTimeStamp } from "../../libs/find-time-stamp";
 import URLParser from "@/libs/url-parser";
 
-export class Scraper extends Browser {
+export class PuppeteerScraper extends Browser {
   constructor() {
     super();
   }
