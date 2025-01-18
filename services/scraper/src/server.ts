@@ -57,7 +57,7 @@ fastify.post('/scrape', async (request, reply) => {
         return await puppeteerScraper.scrape(urlParser);
 
       default:
-        return await cheerioScraper.scrapeWithRetry(urlParser, 3, 1000);;
+        return await cheerioScraper.scrapeWithRetry(urlParser, 3, 1000);
     }
 
   }
