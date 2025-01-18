@@ -8,6 +8,9 @@ export const sanitise = (str: string): string => {
   str = str.replace(/[\u{1F680}-\u{1F6FF}]/gu, ''); // Transport & Map
   str = str.replace(/[\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, ''); // Misc symbols
 
+  // Remove specific combined character \u9851\u65039 (this Unicode character)
+  str = str.replace(/\u9851\u65039/g, '');
+
   // Remove special symbols like ©, ®, ™, and others
   str = str.replace(/[©®™✓♻️☆★⚡]|☑️/g, '');
 
