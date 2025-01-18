@@ -19,9 +19,14 @@ export class CheerioScraper {
       });
       if (response.data) console.log("Successfully fetched page");
       return response.data;
-    } catch (error: any) {
-      console.error(`Failed to fetch page: ${error.message}`);
-      throw new Error('Failed to fetch page');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(`Failed to fetch page: ${error.message}`);
+        throw new Error('Failed to fetch page');
+      } else {
+        console.error(`Failed to fetch page: ${String(error)}`);
+        throw new Error('Failed to fetch page');
+      }
     }
   }
 
