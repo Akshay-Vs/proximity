@@ -87,7 +87,7 @@ By default, the server listens on `http://localhost:3000`.
    
    - The `driver` must:
       - Be `cheerio` or `puppeteer`
-      - defaults to `cheerio` which scrapes static pages 40x faster than `puppeteer`
+      - defaults to `cheerio` which is significantly faster for static pages
       - use `puppeteer` to scrape dynamic, client-side rendered web pages   
 
 - **Response**:
