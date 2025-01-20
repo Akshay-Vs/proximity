@@ -2,7 +2,7 @@
 
 ## Overview
 
-The **Scraper Service** is a lightweight and efficient Fastify-based server designed to scrape news articles from trusted sources. The server uses Puppeteer for web scraping and validates data to ensure content quality and security.
+The **Scraper Service** is a lightweight and efficient Fastify-based server designed to scrape news articles from trusted sources. The server uses Puppeteer & Cheerio for web scraping and validates data to ensure content quality and security.
 
 ### Features
 
@@ -76,13 +76,19 @@ By default, the server listens on `http://localhost:3000`.
 
   ```json
   {
-  	"url": "https://example.com/article"
+     "url": "https://example.com/article",
+     "driver" : "cheerio"
   }
   ```
 
   - The `url` must:
     - Be a valid URL.
     - Belong to a trusted source.
+   
+   - The `driver` must:
+      - Be `cheerio` or `puppeteer`
+      - defaults to `cheerio` which scrapes static pages 40x faster than `puppeteer`
+      - use `puppeteer` to scrape dynamic, client-side rendered web pages   
 
 - **Response**:
 
