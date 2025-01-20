@@ -12,6 +12,7 @@ The **Scraper Service** is a lightweight and efficient Fastify-based server desi
 - **Trusted Source Validation**: Only scrape content from whitelisted domains.
 - **Content Sanitization**: Mitigates XSS risks with content sanitization.
 - **Puppeteer Integration**: Automated browser operations for precise data extraction.
+- **Cheerio Integration**: Fast and efficient static HTML parsing capabilities.
 
 ---
 
