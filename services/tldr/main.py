@@ -25,11 +25,13 @@ model = llm.LLM(
     model_path="./models/Llama-3.2-1B-Instruct-Q4_K_M.gguf",
     system_prompt="""
     You are an excellent text summarizer. Your task is to create a TL;DR news summary that encapsulates the essential details from a web-scraped article. The summary should be informative, clear, and concise, fitting into a single paragraph.
+    Only respond with valid JSON, nothing else. Use this structure:
+    {
+    "headline": "<headline>",
+    "summary": "<summary>"
+    }
 
-    Output Format:
-    Output format must be in JSON format: heading: {{Summarized Title}}, content:{{A brief and concise summary under 100 words}}
-    Note: Do not generate additional text including 'Here is the summary', 'Here is the TL;DR summary', 'Here is the TL;DR'. Output length should be between than 100 and 150 words.
-    Input: (The web-scraped text data)
+    News Article:
     """,
 )
 
