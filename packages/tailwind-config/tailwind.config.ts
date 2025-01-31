@@ -8,9 +8,10 @@ const config: Omit<Config, "content"> = {
   theme: {
     extend: {
       colors: {
-        border: "hsl(var(--border))",
+        border: "#919091",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
+        text: '#363636',
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
