@@ -20,7 +20,8 @@ const SearchBar = ({
 	return (
 		<SearchInput
 			placeholder="Trending, Tech, Sports etc..."
-			callback={(data) => console.log(data)}
+			callback={(data) => {/* handle search */}}
+			aria-label="Search content"
 			onContainerClick={() => onContainerClick?.()}
 			onContainerKeyDown={(e) => {
 				if (e.key === 'Enter') {
@@ -39,6 +40,7 @@ const SearchBar = ({
 			<button
 				className="h-7 w-7 p-0 m-0 border-[#919091]"
 				onClick={() => onIconClick?.()}
+				aria-label={icon === 'search' ? 'Search' : 'Go back'}
 			>
 				{icon === 'search' ? (
 					<SearchIcon strokeWidth={2} />

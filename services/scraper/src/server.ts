@@ -25,8 +25,7 @@ fastify.register(
 
 const puppeteerScraper = new PuppeteerScraper();
 const cheerioScraper = new CheerioScraper();
-
-fastify.get('/', async (_request, _reply) => {
+fastify.get('/', async () => {
   return { "service": "scraper", "status": "running", "version": "0.0.1", "message": "I scrape the news" }
 })
 
@@ -57,7 +56,7 @@ fastify.post('/scrape', async (request, reply) => {
         return await puppeteerScraper.scrape(urlParser);
 
       default:
-        return await cheerioScraper.scrapeWithRetry(urlParser, 3, 1000);;
+        return await cheerioScraper.scrapeWithRetry(urlParser, 3, 1000);
     }
 
   }
