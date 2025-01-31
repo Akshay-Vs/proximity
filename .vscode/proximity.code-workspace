@@ -9,16 +9,28 @@
 			"path": "../apps/web"
 		},
 		{
-			"name": "📦 @proximity/ui",
-			"path": "../packages/ui"
-		},
-		{
 			"name": "📦 @proximity/database",
 			"path": "../packages/database"
 		},
 		{
 			"name": "📦 @proximity/env",
 			"path": "../packages/env"
+		},
+		{
+			"name": "📦 @proximity/tailwind-config",
+			"path": "../packages/tailwind-config"
+		},
+		{
+			"name": "📦 @proximity/ui",
+			"path": "../packages/ui"
+		},
+		{
+			"name": "scraper",
+			"path": "../services/scraper"
+		},
+		{
+			"name": "tldr-generator-service",
+			"path": "../services/tldr"
 		}
 	],
 	"settings": {}

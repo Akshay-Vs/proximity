@@ -11,6 +11,9 @@ interface SearchInput extends PropsWithChildren {
 	onInputKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 
 	callback?: <T>(searchResult: T) => void;
+
+	disable: boolean;
+	readOnly: boolean;
 }
 
 const SearchInput = ({
@@ -19,6 +22,8 @@ const SearchInput = ({
 	onContainerKeyDown,
 	onInputClick,
 	onInputKeyDown,
+	disable,
+	readOnly,
 	children,
 }: SearchInput) => {
 	const [search, setSearch] = useState('');
@@ -29,7 +34,7 @@ const SearchInput = ({
 
 	return (
 		<div
-			className="flex gap-2 center w-full h-14 rounded-[30px] border-2 border-[#919091] text-[#363636] px-4"
+			className="flex gap-2 center w-full h-14 rounded-[30px] border-2 border-border text-text px-4"
 			onClick={onContainerClick}
 			onKeyDown={onContainerKeyDown}
 		>
@@ -41,7 +46,9 @@ const SearchInput = ({
 				placeholder={placeholder}
 				onKeyDown={onInputKeyDown}
 				onClick={onInputClick}
-				className="center leading-none h-9 w-full rounded-none border-none bg-transparent shadow-none md:text-3xl focus:outline-none focus-visible:ring-0 placeholder:text-[#626262] placeholder:font-medium px-0 py-0"
+				disabled={disable}
+				readOnly={readOnly}
+				className="center leading-none h-9 w-full rounded-none border-none bg-transparent shadow-none md:text-3xl focus:outline-none focus-visible:ring-0 placeholder:text-[#626262] placeholder:font-medium px-0 py-0 disabled:opacity-100 cursor-pointer disabled:cursor-pointer"
 			/>
 		</div>
 	);
