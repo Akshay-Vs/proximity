@@ -1,10 +1,11 @@
 'use client';
+import NewsCard, {
+	NewsCardProps,
+} from '@/components/shared/news-card/news-card';
+import NewsCardSkeleton from '@/components/shared/news-card/news-card-skeleton';
 import { useEffect, useState } from 'react';
 
-import NewsCard, { NewsCardProps } from '../../../shared/news-card/news-card';
-import NewsCardSkeleton from '../../../shared/news-card/news-card-skeleton';
-
-const NewsGrid = () => {
+const ResultsGrid = () => {
 	const [news, setNews] = useState<NewsCardProps[] | 'loading'>([]);
 
 	useEffect(() => {
@@ -35,7 +36,7 @@ const NewsGrid = () => {
 	}, []);
 
 	return (
-		<section className="gap-6 px-[5%] pb-6 grid grid-cols-1 w-full h-full">
+		<section className="gap-6 pb-6 grid grid-cols-1 w-full h-full">
 			{news === 'loading'
 				? Array.from({ length: 5 }).map((_, i) => <NewsCardSkeleton key={i} />)
 				: news.map((news) => (
@@ -53,4 +54,4 @@ const NewsGrid = () => {
 	);
 };
 
-export default NewsGrid;
+export default ResultsGrid;

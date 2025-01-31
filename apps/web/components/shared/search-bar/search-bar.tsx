@@ -7,7 +7,7 @@ interface SearchBarProps {
 	onContainerClick?: (event?: React.MouseEvent<HTMLDivElement>) => void;
 	onInputClick?: (event?: React.MouseEvent<HTMLInputElement>) => void;
 	onIconClick?: (event?: React.MouseEvent<HTMLInputElement>) => void;
-	icon?: 'search' | 'cheveron';
+	icon?: 'search' | 'chevron';
 	readonly?: boolean;
 }
 

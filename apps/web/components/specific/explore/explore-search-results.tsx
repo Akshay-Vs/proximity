@@ -21,7 +21,7 @@ const ExploreSearchResults = () => {
 			{results.map((result) => (
 				<TextCheveron
 					key={result.id}
-					href={`/explore/topics/${result.id}`}
+					href={`/topic?q=${result.label}`}
 					label={result.label}
 				/>
 			))}
