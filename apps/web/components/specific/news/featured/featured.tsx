@@ -11,7 +11,7 @@ interface FeaturedProps {
 
 const Featured = ({ title, description, image }: FeaturedProps) => {
 	return (
-		<article className="main-container flex-col">
+		<article className="spacing flex-col">
 			<FeaturedTitle title={title} />
 			<div className="center gap-4">
 				<FeaturedImage image={image} />
