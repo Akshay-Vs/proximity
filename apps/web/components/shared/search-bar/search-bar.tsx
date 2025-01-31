@@ -1,4 +1,5 @@
 'use client';
+import { useSearchStore } from '@/stores/search-store';
 import { SearchInput } from '@proximity/ui/react';
 import { ChevronLeft, SearchIcon } from 'lucide-react';
 
@@ -17,10 +18,14 @@ const SearchBar = ({
 	icon = 'search',
 	readonly = false,
 }: SearchBarProps) => {
+	const { setQuery, query } = useSearchStore();
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setQuery(e.target.value);
+	};
+
 	return (
 		<SearchInput
 			placeholder="Trending, Tech, Sports etc..."
-			callback={(data) => {/* handle search */}}
 			aria-label="Search content"
 			onContainerClick={() => onContainerClick?.()}
 			onContainerKeyDown={(e) => {
@@ -34,8 +39,10 @@ const SearchBar = ({
 					onInputClick?.();
 				}
 			}}
+			value={query}
+			onChange={handleChange}
 			readOnly={readonly}
-			disable={false}
+			disabled={false}
 		>
 			<button
 				className="h-7 w-7 p-0 m-0 border-[#919091]"

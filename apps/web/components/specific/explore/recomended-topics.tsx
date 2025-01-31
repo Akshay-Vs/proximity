@@ -1,35 +1,18 @@
-import { ArrowUpRight } from 'lucide-react';
-import Link from 'next/link';
+import TextCheveron from '@/components/shared/text-cheveron/text-cheveron';
+import getRecomendedTopics from '@/data/get-recomended-topics';
 
-const RecomendedTopics = () => {
-	const topics = [
-		{
-			id: 1,
-			label: 'Mars colonisation',
-		},
-		{
-			id: 2,
-			label: 'CRISPR Technology',
-		},
-		{
-			id: 3,
-			label: 'Quantum Computing',
-		},
-		{ id: 4, label: 'Nuclear Fusion' },
-	];
+const RecomendedTopics = async () => {
+	const topics = await getRecomendedTopics();
 	return (
 		<div>
 			<h2 className="text-2xl">Jump back in to</h2>
 
 			{topics.map((topic) => (
-				<Link
-					href={`/topic/${topic.id}`}
+				<TextCheveron
 					key={topic.id}
-					className="flex justify-between items-center px-4 py-3"
-				>
-					<p className="text-lg">{topic.label}</p>
-					<ArrowUpRight />
-				</Link>
+					href={`/explore/topics/${topic.id}`}
+					label={topic.label}
+				/>
 			))}
 		</div>
 	);
