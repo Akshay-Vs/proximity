@@ -26,9 +26,6 @@ const SearchBar = ({
 	return (
 		<SearchInput
 			placeholder="Trending, Tech, Sports etc..."
-			callback={() => {
-				/* handle search */
-			}}
 			aria-label="Search content"
 			onContainerClick={() => onContainerClick?.()}
 			onContainerKeyDown={(e) => {
