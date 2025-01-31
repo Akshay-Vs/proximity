@@ -2,6 +2,8 @@
 
 ## Overview
 
+![diagram](https://github.com/user-attachments/assets/548de8e5-3f08-4ec1-9850-d87dee0f774c)
+
 The **Scraper Service** is a lightweight and efficient Fastify-based server designed to scrape news articles from trusted sources. The server uses Puppeteer & Cheerio for web scraping and validates data to ensure content quality and security.
 
 ### Features
