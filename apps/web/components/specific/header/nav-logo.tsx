@@ -1,9 +1,10 @@
 import Logo from '@/public/images/Logo.png';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const NavLogo = () => {
 	return (
-		<div className="flex gap-2 items-center">
+		<Link href="/" className="flex gap-2 items-center">
 			<Image
 				src={Logo}
 				alt="Logo"
@@ -12,7 +13,7 @@ const NavLogo = () => {
 				className="object-center object-contain"
 			/>
 			<h1 className="text-2xl font-jost">Proximity</h1>
-		</div>
+		</Link>
 	);
 };
 

@@ -13,6 +13,11 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        hostname: 'ko77xaoqa4.ufs.sh',
+        port: '',
+        pathname: '/**',
+      },
 
     ]
   }

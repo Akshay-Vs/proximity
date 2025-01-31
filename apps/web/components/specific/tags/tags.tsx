@@ -7,7 +7,7 @@ const Tags = () => {
 			<div className="absolute top-0 left-0 w-[7%] z-20 h-full bg-gradient-to-r from-[#ebeced] via-[#ebecedab] to-[#ebeced00]" />
 			<div className="absolute top-0 right-0 w-[7%] z-20 h-full bg-gradient-to-r from-[#ebeced00] via-[#ebecedab] to-[#ebeced]" />
 
-			<div className="flex items-center gap-4 w-full overflow-y-hidden overflow-x-scroll horizontal-scroll px-[5%]">
+			<div className="flex items-center gap-4 w-full overflow-y-hidden overflow-x-scroll horizontal-scroll padding">
 				<TagButtonEnhanced label="For You" />
 				<TagButtonPrimary label="Technology" />
 				<TagButtonPrimary label="Space" />
