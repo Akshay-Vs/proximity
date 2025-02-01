@@ -10,7 +10,7 @@ const RecomendedTopics = async () => {
 			{topics.map((topic) => (
 				<TextCheveron
 					key={topic.id}
-					href={`/explore/topics/${topic.id}`}
+					href={`/topic?q=${topic.label}`}
 					label={topic.label}
 				/>
 			))}
