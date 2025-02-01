@@ -12,7 +12,7 @@ const config: Omit<Config, "content"> = {
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         text: '#363636',
-        background: "hsl(var(--background))",
+        background: "#ebeced",
         foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",

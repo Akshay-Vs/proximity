@@ -24,7 +24,7 @@ const NewsCard = ({
 	views,
 }: NewsCardProps) => {
 	return (
-		<Link href={slug} className="h-fit w-full">
+		<Link href={`/story/${slug}`} className="h-fit w-full">
 			<article className="relative w-full h-fit col-center gap-3">
 				<NewsCoverImage image={image} alt={title} />
 				<NewsTitle title={title} />
