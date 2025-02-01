@@ -2,7 +2,7 @@
 import SearchBar from '@/components/shared/search-bar/search-bar';
 import { useSearchStore } from '@/stores/search-store';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useEffect } from 'react';
+import { useEffect } from 'react';
 
 const TopicSearch = () => {
 	const router = useRouter();
@@ -15,13 +15,11 @@ const TopicSearch = () => {
 	}, [searchParams, setQuery, query]);
 
 	return (
-		<Suspense fallback={<SearchBar icon="chevron" readonly={true} />}>
-			<SearchBar
-				icon="chevron"
-				onContainerClick={() => router.push('/explore')}
-				readonly={true}
-			/>
-		</Suspense>
+		<SearchBar
+			icon="chevron"
+			onContainerClick={() => router.push('/explore')}
+			readonly={true}
+		/>
 	);
 };
 
