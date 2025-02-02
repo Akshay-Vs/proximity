@@ -31,18 +31,18 @@
 		"postinstall": "pnpm build"
 	},
 	"peerDependencies": {
-		"react": "^18.2.0"
+		"react": "^19.0.0"
 	},
 	"devDependencies": {
 		"@proximity/eslint-config": "workspace:*",
 		"@proximity/typescript-config": "workspace:*",
 		"@types/react": "^19.0.1",
-		"autoprefixer": "^10.4.20",
-		"postcss": "^8.5.1",
-		"tailwindcss": "^3.4.17",
 		"typescript": "5.7.3"
 	},
 	"dependencies": {
+		"autoprefixer": "^10.4.20",
+		"postcss": "^8.5.1",
+		"tailwindcss": "^3.4.17",
 		"@hookform/resolvers": "^3.10.0",
 		"@proximity/tailwind-config": "workspace:*",
 		"@radix-ui/react-label": "^2.1.1",
