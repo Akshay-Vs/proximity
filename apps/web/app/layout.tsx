@@ -1,4 +1,5 @@
 import { Geist, Jost } from 'next/font/google';
+import NextTopLoader from 'nextjs-toploader';
 
 import { myMetadata, myViewport } from '@/pwa';
 
@@ -26,6 +27,9 @@ const RootLayout = ({
 	return (
 		<html lang="en">
 			<body className={`${geistSans.variable} ${jost.variable} antialiased`}>
+				<div className="absolute top-0 left-0 w-full h-2">
+					<NextTopLoader color="#484848" shadow="none" showSpinner={false} />
+				</div>
 				{children}
 			</body>
 		</html>

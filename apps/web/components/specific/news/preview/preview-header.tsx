@@ -1,6 +1,6 @@
 import { Button } from '@proximity/ui/shadcn/button';
 import { ArrowLeft } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'nextjs-toploader/app';
 
 const PreviewHeader = () => {
 	const router = useRouter();

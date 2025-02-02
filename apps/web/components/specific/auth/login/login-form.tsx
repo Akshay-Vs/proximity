@@ -13,6 +13,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import StyledInput from '@/components/shared/input/styled-input';
 import { Button } from '@proximity/ui/shadcn/button';
 import PasswordInput from '@/components/shared/input/password-input';
+import { useRouter } from 'nextjs-toploader/app';
+import Link from 'next/link';
 const loginSchema = z.object({
 	email: z.string().email(),
 	password: z
@@ -21,6 +23,7 @@ const loginSchema = z.object({
 });
 
 const LoginForm = () => {
+	const router = useRouter();
 	const form = useForm<z.infer<typeof loginSchema>>({
 		resolver: zodResolver(loginSchema),
 		defaultValues: {
@@ -30,6 +33,9 @@ const LoginForm = () => {
 	});
 
 	function onSubmit(values: z.infer<typeof loginSchema>) {
+		//TODO add login logic here
+
+		router.push('/');
 		console.log(values);
 	}
 
@@ -75,6 +81,15 @@ const LoginForm = () => {
 					<Button type="submit" className="h-14 px-7 rounded-full mt-4">
 						Login
 					</Button>
+
+					<div className="flex justify-between">
+						<Link href="/auth/reset-passowrd" className="text-end px-2 text-sm">
+							forgot password?
+						</Link>
+						<Link href="/auth/register" className="text-end px-2 text-sm">
+							create new account
+						</Link>
+					</div>
 				</form>
 			</Form>
 		</div>

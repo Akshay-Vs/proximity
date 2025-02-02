@@ -1,7 +1,7 @@
 'use client';
 import SearchBar from '@/components/shared/search-bar/search-bar';
 import { useSearchStore } from '@/stores/search-store';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'nextjs-toploader/app';
 import { useEffect } from 'react';
 
 const ExploreRedirect = () => {
