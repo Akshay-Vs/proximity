@@ -27,7 +27,8 @@
 		"build": "tsup",
 		"lint": "eslint src/",
 		"dev": "tsc watch.ts --outDir ./dist && node ./dist/watch.js",
-		"type-check": "tsc --noEmit"
+		"type-check": "tsc --noEmit",
+		"postinstall": "pnpm build"
 	},
 	"peerDependencies": {
 		"react": "^18.2.0"
