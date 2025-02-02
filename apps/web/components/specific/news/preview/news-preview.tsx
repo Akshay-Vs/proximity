@@ -11,9 +11,9 @@ const NewsPreview = () => {
 			<PreviewHeader />
 			<PreviewImage />
 
-			<Separator className="my-4" />
-			<div className="h-full w-screen bottom-32 flex justify-end flex-col gap-4 pb-28 px-4 z-20">
+			<div className="h-full w-screen bottom-32 flex justify-end flex-col gap-4 pb-20 px-4 z-20">
 				<PreviewArticle />
+				<Separator className="my-1 opacity-50" />
 				<PreviewFooter />
 			</div>
 		</div>
