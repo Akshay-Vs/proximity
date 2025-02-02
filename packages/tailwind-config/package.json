@@ -7,14 +7,12 @@
 	"exports": {
 		".": "./tailwind.config.ts"
 	},
-	"devDependencies": {
-		"@proximity/typescript-config": "workspace:*",
-		"tailwindcss": "^3.4.17"
-	},
 	"keywords": [],
 	"author": "active-matrix",
 	"license": "MIT",
 	"dependencies": {
+		"@proximity/typescript-config": "workspace:*",
+		"tailwindcss": "^3.4.17",
 		"tailwindcss-animate": "^1.0.7"
 	}
 }
