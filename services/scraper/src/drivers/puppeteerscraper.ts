@@ -1,18 +1,14 @@
 import { Page } from "puppeteer";
-import xss from 'xss';
 import z from "zod";
 
-import { Browser } from "../browser";
-import { sanitise } from "../../libs/sanitise";
-import { validateResult } from "../../libs/validate-result";
-import { findFirstTimeStamp } from "../../libs/find-time-stamp";
 import URLParser from "@/libs/url-parser";
 
-export class PuppeteerScraper extends Browser {
-  constructor() {
-    super();
-  }
+import { sanitise } from "@/libs/sanitise";
+import { validateResult } from "@/schema/validate-result";
+import { findFirstTimeStamp } from "@/libs/find-time-stamp";
+import { Browser } from "@/src/browser";
 
+export class PuppeteerScraper extends Browser {
   private async extractTitle(page: Page): Promise<string | null> {
     console.log("Extracting title...");
     return page.evaluate(() => {
@@ -25,35 +21,34 @@ export class PuppeteerScraper extends Browser {
   private async extractContent(page: Page): Promise<string> {
     console.log("Extracting content...");
     const extractedContent = await page.evaluate(() => {
-      const content = document.querySelectorAll('p')
-      const contentText = Array.from(content).map(p => p.textContent).join(' ')
-      return contentText
-    })
+      const content = document.querySelectorAll('p');
+      const contentText = Array.from(content).map(p => p.textContent?.trim()).filter(Boolean).join(' ');
+      return contentText;
+    });
     const sanitisedContent = sanitise(extractedContent);
-    return xss(sanitisedContent);
+    return sanitisedContent;
   }
 
   private async extractImageUrl(page: Page, url: URLParser): Promise<string | null> {
     console.log("Extracting image URL...");
-    return page.evaluate(() => {
-      const image = document.querySelector('img')
-      const imageUrl = image?.getAttribute('src')
+    return page.evaluate((baseUrl) => {
+      const image = document.querySelector('article img');
+      const imageUrl = image?.getAttribute('src');
       if (!imageUrl) return null;
 
       let formattedUrl = imageUrl;
-
       if (imageUrl.startsWith('/')) {
-        formattedUrl = url.getProtocol().concat(url.getHost().concat(imageUrl));
+        formattedUrl = new URL(imageUrl, baseUrl).href;
       }
       return formattedUrl.split('?')[0];
-    })
+    }, url.getURL());
   }
 
   private async extractDate(page: Page): Promise<string> {
     console.log("Extracting date...");
-    const pageData = page.evaluate(() => {
+    const pageData = await page.evaluate(() => {
       return document.body.textContent || ''; // Get page content
-    })
+    });
 
     const timestamp = await findFirstTimeStamp(pageData)
     return timestamp
@@ -62,27 +57,33 @@ export class PuppeteerScraper extends Browser {
   public async scrape(url: URLParser): Promise<z.infer<typeof validateResult> | null> {
     const page = await this.openPage(url)
 
-    const title = await this.extractTitle(page)
-    const content = await this.extractContent(page)
-    const imageUrl = await this.extractImageUrl(page, url)
-    const date = await this.extractDate(page)
+    const [title, content, imageUrl, date] = await Promise.all([
+      this.extractTitle(page),
+      this.extractContent(page),
+      this.extractImageUrl(page, url),
+      this.extractDate(page)
+    ]);
+
     const sourceName = url.slice().split('.')[0]
     const scrapedAt = new Date().toISOString()
 
     await this.closePage(page)
 
-    if (!title || !content || !imageUrl || !date) {
-      throw new Error('Failed to scrape page')
+    //? Don't need to include imageUrl here since it's handled by Zod
+    for (const [field, value] of Object.entries({ title, content, date, sourceName, scrapedAt })) {
+      if (!value) {
+        throw new Error(`Failed to scrape page, no ${field} found`);
+      }
     }
 
     const validatedResult = validateResult.safeParse({
       title,
       imageUrl,
       sourceName,
+      scrapedAt,
+      content,
       sourceUrl: url.getURL(),
       date: new Date(date).toISOString(),
-      scrapedAt,
-      content
     });
 
     if (!validatedResult.success) {
@@ -90,10 +91,8 @@ export class PuppeteerScraper extends Browser {
       throw new Error('Failed to validate result')
     }
 
-
     return {
       ...validatedResult.data,
     }
   }
-
 }
