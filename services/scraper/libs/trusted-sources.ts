@@ -10,4 +10,6 @@ export const TRUSTED_SOURCES = [
   'wsj.com',
   'bloomberg.com',
   'cnbc.com',
+  'medium.com',
+  'dev.to'
 ]
