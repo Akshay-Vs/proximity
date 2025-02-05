@@ -25,6 +25,10 @@
 			"path": "../packages/ui"
 		},
 		{
+			"name": "auth",
+			"path": "../services/auth"
+		},
+		{
 			"name": "scraper",
 			"path": "../services/scraper"
 		},

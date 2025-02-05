@@ -1,22 +1,19 @@
 export const sanitise = (str: string): string => {
+  // Normalize Unicode to handle variation selectors properly
+  str = str.normalize('NFKC');
+
   // Remove URLs (http, https, www)
-  str = str.replace(/https?:\/\/[^\s]+|www\.[^\s]+/g, '');
+  str = str.replace(/https?:\/\/\S+|www\.\S+/g, '');
 
-  // Remove emojis
-  str = str.replace(/[\u{1F600}-\u{1F64F}]/gu, ''); // Emoticons
-  str = str.replace(/[\u{1F300}-\u{1F5FF}]/gu, ''); // Symbols & Pictographs
-  str = str.replace(/[\u{1F680}-\u{1F6FF}]/gu, ''); // Transport & Map
-  str = str.replace(/[\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, ''); // Misc symbols
+  // Remove emojis and pictographs
+  str = str.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '');
 
-  // Remove special symbols like ©, ®, ™, and others
-  str = str.replace(/[©®™✓♻️☆★⚡]|☑️/g, '');
+  // Remove special symbols like ©, ®, ™, ✓, etc.
+  str = str.replace(/[©®™✓♻️☆★⚡]/g, '').replace(/☑️/g, '').replace(/\u9851\uFE0F/g, '');
 
-  // Remove any non-alphanumeric characters except spaces
-  str = str.replace(/[^a-zA-Z0-9\s]/g, '');
+  // Remove non-alphanumeric characters except spaces
+  str = str.replace(/[^\w\s]/g, '');
 
-  // Replace multiple spaces with a single space
-  str = str.replace(/\s+/g, ' ');
-
-  // Trim leading and trailing whitespace
-  return str.trim();
+  // Replace multiple spaces with a single space and trim
+  return str.replace(/\s+/g, ' ').trim();
 };
