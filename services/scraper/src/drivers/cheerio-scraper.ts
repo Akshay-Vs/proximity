@@ -1,12 +1,11 @@
 import * as cheerio from 'cheerio';
 import axios from 'axios';
-import xss from 'xss';
 import z from 'zod';
 
-import { sanitise } from '../../libs/sanitise';
-import { validateResult } from '../../libs/validate-result';
-import { findFirstTimeStamp } from '../../libs/find-time-stamp';
 import URLParser from '@/libs/url-parser';
+import { sanitise } from '@/libs/sanitise';
+import { validateResult } from '@/schema/validate-result';
+import { findFirstTimeStamp } from '@/libs/find-time-stamp';
 
 export class CheerioScraper {
   private async fetchPage(url: string): Promise<string> {
@@ -22,10 +21,10 @@ export class CheerioScraper {
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(`Failed to fetch page: ${error.message}`);
-        throw new Error('Failed to fetch page');
+        throw new Error(`Failed to fetch page: ${error.message}`);
       } else {
         console.error(`Failed to fetch page: ${String(error)}`);
-        throw new Error('Failed to fetch page');
+        throw new Error('Failed to fetch page: Unknown error');
       }
     }
   }
@@ -33,31 +32,33 @@ export class CheerioScraper {
   private extractTitle($: cheerio.Root): string | null {
     console.log("Extracting title...");
     const heading = $('h1').first();
-    return heading.length ?
-      heading.text().replace('\n', '').trim() :
-      null;
+    return heading.length ? heading.text().replace('\n', '').trim() : null;
   }
 
   private extractContent($: cheerio.Root): string {
     console.log("Extracting content...");
     const paragraphs = $('p')
-      .map((_, element) => $(element).text())
+      .map((_, element) => $(element).text().trim())
       .get()
+      .filter(Boolean)  // Remove empty paragraphs
       .join(' ');
 
-    const sanitisedContent = sanitise(paragraphs);
-    return xss(sanitisedContent);
+    return sanitise(paragraphs);
   }
 
   private extractImageUrl($: cheerio.Root, url: URLParser): string | null {
     console.log("Extracting image URL...");
-    const image = $('img').first();
-    const imageUrl = image.attr('src');
+    // First try to find image within article, then fallback to any image
+    const image = $('article img').first().length ?
+      $('article img').first() :
+      $('img').first();
 
+    const imageUrl = image.attr('src');
     if (!imageUrl) return null;
 
+    // Handle relative URLs
     if (imageUrl.startsWith('/')) {
-      return url.getProtocol().concat(url.getHost()).concat(imageUrl);
+      return new URL(imageUrl, url.getURL()).href.split('?')[0];
     }
 
     return imageUrl.split('?')[0];
@@ -69,46 +70,33 @@ export class CheerioScraper {
     return findFirstTimeStamp(pageContent);
   }
 
-  private handleError(error: Error, context: string): never {
-    console.error(`Error in ${context}:`, error);
-    throw new Error(`Failed during ${context}: ${error.message}`);
-  }
-
   public async scrape(url: URLParser): Promise<z.infer<typeof validateResult> | null> {
-    let $: cheerio.Root | undefined;
+    console.log(`Initializing cheerio scraper: ${url.getURL()}`);
 
     try {
       const html = await this.fetchPage(url.getURL());
       if (!html) {
-        console.error(`Failed to fetch page content for URL: ${url.getURL()}`);
         throw new Error('Received empty HTML');
       }
 
-      if (!cheerio.load) {
-        console.error('Cheerio library is not properly initialized.');
-        throw new Error('Cheerio initialization error');
-      }
+      const $ = cheerio.load(html);
 
-      $ = cheerio.load(html);
-      console.log('Cheerio successfully initialized with HTML content.');
-    } catch (error) {
-      this.handleError(error as Error, 'page fetching');
-    }
+      // Parallel extraction of all fields
+      const [title, content, imageUrl, date] = await Promise.all([
+        this.extractTitle($),
+        this.extractContent($),
+        this.extractImageUrl($, url),
+        this.extractDate($)
+      ]);
 
-    try {
-      if (!$) {
-        throw new Error('Cheerio instance is undefined. Cannot proceed with scraping.');
-      }
-
-      const title = this.extractTitle($);
-      const content = this.extractContent($);
-      const imageUrl = this.extractImageUrl($, url);
-      const date = await this.extractDate($);
       const sourceName = url.slice().split('.')[0];
       const scrapedAt = new Date().toISOString();
 
-      if (!title || !content || !imageUrl || !date) {
-        throw new Error('Required fields missing');
+      // Validate all required fields are present
+      for (const [field, value] of Object.entries({ title, content, date, sourceName, scrapedAt })) {
+        if (!value) {
+          throw new Error(`Failed to scrape page, no ${field} found`);
+        }
       }
 
       const validatedResult = validateResult.safeParse({
@@ -131,11 +119,10 @@ export class CheerioScraper {
       };
 
     } catch (error) {
-      this.handleError(error as Error, 'data extraction');
-      return null;
+      console.error('Scraping failed:', error instanceof Error ? error.message : String(error));
+      throw error;
     }
   }
-
 
   public async scrapeWithRetry(
     url: URLParser,
@@ -146,7 +133,10 @@ export class CheerioScraper {
       try {
         return await this.scrape(url);
       } catch (error) {
-        if (attempt === maxRetries) throw error;
+        if (attempt === maxRetries) {
+          console.error('All retry attempts failed:', error);
+          throw error;
+        }
         console.warn(`Attempt ${attempt} failed, retrying in ${delayMs}ms...`);
         await new Promise(resolve => setTimeout(resolve, delayMs));
       }

@@ -35,14 +35,18 @@ export default class URLParser {
   }
 
   public slice(number = -2): string {
-    if (number > 0) throw new Error('Slice number must be negative');
+    if (number >= 0) throw new Error('Slice number must be negative');
     const parts = this.url.host.split('.');
-    if (Math.abs(number) >= parts.length) {
+
+    // Ensure the slice index is within the bounds of the domain parts
+    if (Math.abs(number) > parts.length) {
       throw new Error('Slice number exceeds domain parts length');
     }
-    return parts.slice(number).join('.');
 
+    // joining them back into a string
+    return parts.slice(number).join('.');
   }
+
 
   protected validateUrl(url: string): URL {
     try {

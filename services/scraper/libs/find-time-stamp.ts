@@ -1,63 +1,44 @@
 const datePattern = [
-  // Matches 12-12-2024
-  "\\d{2}-\\d{2}-\\d{4}",
-  // Matches 12/12/2024
-  "\\d{2}/\\d{2}/\\d{4}",
-  // Matches 12-January-2024
-  "\\d{1,2}-(January|February|March|April|May|June|July|August|September|October|November|December)-\\d{4}",
-  // Matches 2024-12-12
-  "\\d{4}-\\d{1,2}-\\d{1,2}",
-  // Matches 12 January 2024
-  "\\d{1,2}\\s(January|February|March|April|May|June|July|August|September|October|November|December)\\s\\d{4}",
-  // Matches 12-12-2024
-  "\\d{1,2}-\\d{1,2}-\\d{4}"
+  "(?:Post(?:ed)? on\\s)?\\d{1,2}[-/]\\d{1,2}[-/]\\d{4}", // 12-12-2024, 12/12/2024
+  "(?:Post(?:ed)? on\\s)?\\d{1,2}-(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)-\\d{4}", // 12-Jan-2024, 12-January-2024
+  "(?:Post(?:ed)? on\\s)?\\d{4}-\\d{1,2}-\\d{1,2}", // 2024-12-12
+  "(?:Post(?:ed)? on\\s)?\\d{1,2}\\s(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)\\s\\d{4}", // 12 Jan 2024, 12 January 2024
+  "(?:Post(?:ed)? on\\s)?(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\s\\d{1,2}" // Jan 31
 ].join("|");
 
-// Single RegExp object for absolute dates
-const absoluteDateRegex = new RegExp(datePattern, 'g');
+const absoluteDateRegex = new RegExp(datePattern, "gi");
 
-// Relative time pattern
-const relativePattern = "(\\d+)\\s*(hours?|hrs?|minutes?|mins?|seconds?|secs?)\\s*ago";
-const relativeRegex = new RegExp(relativePattern, 'g');
+// relative time pattern
+const relativeRegex = /\b(\d+)\s*(h(?:ours?)?|hr?s?|m(?:inutes?)?|mins?|s(?:econds?)?|secs?)\s*ago\b/i;
 
 // Find the first absolute date in the content
-const findFirstAbsoluteDate = (content: string): string | null => {
-  const match = absoluteDateRegex.exec(content);
-  return match ? match[0] : null;
-};
+const findFirstAbsoluteDate = (content: string): string | null =>
+  absoluteDateRegex.exec(content)?.[0] ?? null;
 
-// Find the first relative date in the content and calculate the actual timestamp
+// Find the first relative date in the content and convert to timestamp
 const findFirstRelativeDate = (content: string): string | null => {
   const match = relativeRegex.exec(content);
-  if (match) {
-    const quantity = parseInt(match[1], 10);
-    const unit = match[2].toLowerCase();
+  if (!match) return null;
 
-    const now = new Date();
-    const publishedDate = new Date();
+  const quantity = parseInt(match[1], 10);
+  const unit = match[2][0]; // Get first letter (h/m/s) for quick comparison
 
-    if (unit.startsWith("hour") || unit.startsWith("hr")) {
-      publishedDate.setHours(now.getHours() - quantity);
-    } else if (unit.startsWith("minute") || unit.startsWith("min")) {
-      publishedDate.setMinutes(now.getMinutes() - quantity);
-    } else if (unit.startsWith("second") || unit.startsWith("sec")) {
-      publishedDate.setSeconds(now.getSeconds() - quantity);
-    }
+  const now = new Date();
+  if (unit === "h") now.setHours(now.getHours() - quantity);
+  else if (unit === "m") now.setMinutes(now.getMinutes() - quantity);
+  else if (unit === "s") now.setSeconds(now.getSeconds() - quantity);
 
-    return publishedDate.toISOString();
-  }
-  return null;
+  return now.toISOString();
 };
 
-export const findFirstTimeStamp = async (pageContent: Promise<string> | string): Promise<string> => {
+// Find the first timestamp
+export const findFirstTimeStamp = async (
+  pageContent: Promise<string> | string
+): Promise<string> => {
   const content = await pageContent;
-  const absoluteDate = findFirstAbsoluteDate(content);
-  if (absoluteDate)
-    return absoluteDate;
-
-  const relativeDate = findFirstRelativeDate(content);
-  if (relativeDate)
-    return relativeDate;
-
-  return new Date().toISOString();
-}
+  return (
+    findFirstAbsoluteDate(content) ??
+    findFirstRelativeDate(content) ??
+    new Date().toISOString()
+  );
+};

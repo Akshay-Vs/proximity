@@ -1,5 +1,4 @@
 {
-	"extends": "@proximity/typescript-config/base.json",
 	"compilerOptions": {
 		"module": "Node16",
 		"target": "ES6",
@@ -9,6 +8,6 @@
 			"@/*": ["./*"]
 		}
 	},
-	"include": ["."],
+	"include": ["./**/*"],
 	"exclude": ["dist", "build", "node_modules"]
 }

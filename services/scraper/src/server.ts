@@ -1,11 +1,11 @@
 import Fastify from 'fastify'
 import fastifyCompress from '@fastify/compress'
 import fastifyRateLimit from '@fastify/rate-limit'
-import z from 'zod'
 
+import URLParser from '@/libs/url-parser'
+
+import { requestBodySchema } from '@/schema/request-body-schema'
 import { PuppeteerScraper } from './drivers/puppeteerscraper'
-import { TRUSTED_SOURCES } from '../libs/trusted-sources'
-import URLParser from '../libs/url-parser'
 import { CheerioScraper } from './drivers/cheerio-scraper'
 
 export const fastify = Fastify({
@@ -17,7 +17,6 @@ fastify.register(fastifyRateLimit, {
   timeWindow: '1 minute'
 })
 
-
 fastify.register(
   fastifyCompress,
   { global: false }
@@ -25,30 +24,21 @@ fastify.register(
 
 const puppeteerScraper = new PuppeteerScraper();
 const cheerioScraper = new CheerioScraper();
+
 fastify.get('/', async () => {
-  return { "service": "scraper", "status": "running", "version": "0.0.1", "message": "I scrape the news" }
+  return { "service": "scraper", "status": "running", "version": "1.0.0", "message": "I scrape the news" }
 })
 
 fastify.post('/scrape', async (request, reply) => {
-
-  const bodySchema = z.object({
-    url: z.string().url().refine(url => {
-      const host = new URLParser(url);
-      return TRUSTED_SOURCES.includes(host.slice());
-    }, {
-      message: 'URL must be from a trusted source',
-    }),
-    driver: z.enum(['puppeteer', 'cheerio']).default('cheerio'),
-  });
-
   try {
-    const validatedBody = bodySchema.safeParse(request.body);
+    const validatedBody = requestBodySchema.safeParse(request.body);
 
     if (!validatedBody || !validatedBody.success) {
       return await reply.status(400).send({ error: 'Validation Error', message: validatedBody.error.message });
     }
 
     const { url, driver } = validatedBody.data;
+
     const urlParser = new URLParser(url);
 
     switch (driver) {
@@ -61,6 +51,7 @@ fastify.post('/scrape', async (request, reply) => {
 
   }
   catch (error) {
-    return await reply.status(500).send({ error: error });
+    const errorMessage = error instanceof Error ? error.message : 'Unknown Error';
+    return await reply.status(500).send({ error: 'Internal Server Error', message: errorMessage });
   }
 })
