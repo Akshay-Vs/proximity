@@ -26,7 +26,7 @@ const puppeteerScraper = new PuppeteerScraper();
 const cheerioScraper = new CheerioScraper();
 
 fastify.get('/', async () => {
-  return { "service": "scraper", "status": "running", "version": "0.2.0", "message": "I scrape the news" }
+  return { "service": "scraper", "status": "running", "version": "1.0.0", "message": "I scrape the news" }
 })
 
 fastify.post('/scrape', async (request, reply) => {
