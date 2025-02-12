@@ -15,12 +15,8 @@ import { Button } from '@proximity/ui/shadcn/button';
 import PasswordInput from '@/components/shared/input/password-input';
 import { useRouter } from 'nextjs-toploader/app';
 import Link from 'next/link';
-const loginSchema = z.object({
-	email: z.string().email(),
-	password: z
-		.string()
-		.min(8, { message: 'Password must contains atleast 8 characters' }),
-});
+import { loginAction } from '@/actions/login-action';
+import { loginSchema } from '@/schemas/login-schema';
 
 const LoginForm = () => {
 	const router = useRouter();
@@ -32,12 +28,10 @@ const LoginForm = () => {
 		},
 	});
 
-	function onSubmit(values: z.infer<typeof loginSchema>) {
-		//TODO add login logic here
-
+	const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+		await loginAction(values);
 		router.push('/');
-		console.log(values);
-	}
+	};
 
 	return (
 		<div className="w-full center flex flex-col">
