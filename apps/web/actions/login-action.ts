@@ -1,52 +1,63 @@
 "use server";
+
 import { loginSchema } from "@/schemas/login-schema";
-import axios from "axios";
 import { z } from "zod";
 import { cookies } from "next/headers";
+import axios from "axios";
+import { LoginResponse, KratosResponse } from "@/types/kratos-types";
 
-export const loginAction = async (values: z.infer<typeof loginSchema>) => {
-  const endpoint = "https://naughty-gates-3mw25r4yly.projects.oryapis.com/self-service/login/api";
-  const response = await axios.get(endpoint);
-  const flow = response.data;
 
-  if (!flow?.ui?.action) {
-    console.log("Incorrect flow:", flow);
-    return { error: "Invalid login flow" };
+export const loginAction = async (
+  values: z.infer<typeof loginSchema>
+): Promise<LoginResponse> => {
+  const kratosUrl = process.env.NEXT_PUBLIC_KRATOS_PUBLIC_URL;
+
+  if (!kratosUrl) {
+    return { error: "Service unavailable" };
   }
 
-  console.log("Logging in...");
   try {
-    const tokenResponse = await axios.post(flow.ui.action, {
-      csfr_token: "",
-      method: "password",
-      password: values.password,
-      password_identifier: values.email,
-    });
+    // Get login flow
+    const flowResponse = await axios.get(`${kratosUrl}/self-service/login/api`);
+    const flow = flowResponse.data;
 
-    console.log("Request success", tokenResponse.data);
-
-    if (!tokenResponse.data.session_token) {
-      return { error: "Authentication failed" };
+    if (!flow?.ui?.action) {
+      return { error: "Unable to process login" };
     }
 
-    // Set session token in response cookie
-    (await
-      // Set session token in response cookie
-      cookies()).set("session_token", tokenResponse.data.session_token, {
+    // Get CSRF token
+    const csrfToken = flow.ui.nodes.find(
+      (node: { attributes: { name: string; }; }) => node.attributes.name === "csrf_token"
+    )?.attributes.value;
+
+    // Submit login
+    const loginResponse = await axios.post<KratosResponse>(
+      flow.ui.action,
+      {
+        csrf_token: csrfToken,
+        method: "password",
+        password: values.password,
+        password_identifier: values.email.toLowerCase().trim(),
+      }
+    );
+
+    if (loginResponse.data.session_token) {
+      const cookieStore = await cookies();
+
+      cookieStore.set("session_token", loginResponse.data.session_token, {
         httpOnly: true,
         secure: true,
         path: "/",
-        sameSite: "lax", // Fix potential issues with navigation requests
+        sameSite: "lax",
         maxAge: 60 * 60 * 24 * 7, // 7 days
       });
 
-    return { success: true };
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("Login error:", error.response?.data || error.message);
-    } else {
-      console.error("Login error:", error);
+      return { success: true };
     }
+
     return { error: "Invalid credentials" };
+
+  } catch {
+    return { error: "Authentication failed" };
   }
 };
