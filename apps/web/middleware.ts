@@ -20,11 +20,6 @@ export async function middleware(request: NextRequest) {
       return createRedirectResponse(request);
     }
 
-    // Skip re-validating session if already validated in this request cycle
-    if (request.headers.get("x-kratos-validated")) {
-      return NextResponse.next();
-    }
-
     // Validate session with Kratos
     const sessionResponse = await fetch(`${KRATOS_PUBLIC_URL}/sessions/whoami`, {
       headers: {

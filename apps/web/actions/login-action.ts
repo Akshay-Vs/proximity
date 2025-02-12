@@ -30,6 +30,15 @@ export const loginAction = async (
       (node: { attributes: { name: string; }; }) => node.attributes.name === "csrf_token"
     )?.attributes.value;
 
+    // if (!csrfToken) {
+    //   return { error: "Invalid login flow - missing CSRF token" };
+    // }
+
+    const sanitizedEmail = values.email.toLowerCase().trim();
+    if (!sanitizedEmail || !values.password) {
+      return { error: "Email and password are required" };
+    }
+
     // Submit login
     const loginResponse = await axios.post<KratosResponse>(
       flow.ui.action,
@@ -37,7 +46,7 @@ export const loginAction = async (
         csrf_token: csrfToken,
         method: "password",
         password: values.password,
-        password_identifier: values.email.toLowerCase().trim(),
+        password_identifier: sanitizedEmail,
       }
     );
 
@@ -52,9 +61,11 @@ export const loginAction = async (
         maxAge: 60 * 60 * 24 * 7, // 7 days
       });
 
+      console.log("Login success")
       return { success: true };
     }
 
+    console.log("Invalid credentials")
     return { error: "Invalid credentials" };
 
   } catch {
