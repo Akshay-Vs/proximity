@@ -12,6 +12,7 @@ import {
 
 import { Label } from '@/src/shadcn/label';
 import { cn } from '../utils/cn';
+import { Check, CircleAlert, TriangleAlert } from 'lucide-react';
 
 const Form = FormProvider;
 
@@ -85,7 +86,7 @@ const FormItem = React.forwardRef<
 FormItem.displayName = 'FormItem';
 
 const FormLabel = React.forwardRef<
-	React.ElementRef<typeof LabelPrimitive.Root>,
+	React.ComponentRef<typeof LabelPrimitive.Root>,
 	React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
 >(({ className, ...props }, ref) => {
 	const { error, formItemId } = useFormField();
@@ -102,7 +103,7 @@ const FormLabel = React.forwardRef<
 FormLabel.displayName = 'FormLabel';
 
 const FormControl = React.forwardRef<
-	React.ElementRef<typeof Slot>,
+	React.ComponentRef<typeof Slot>,
 	React.ComponentPropsWithoutRef<typeof Slot>
 >(({ ...props }, ref) => {
 	const { error, formItemId, formDescriptionId, formMessageId } =
@@ -165,6 +166,41 @@ const FormMessage = React.forwardRef<
 });
 FormMessage.displayName = 'FormMessage';
 
+type FormStatusProps = React.HTMLAttributes<HTMLDivElement> & {
+	status: { type: 'error' | 'info' | 'success'; message: string } | undefined;
+};
+
+const FormStatusMessage = React.forwardRef<HTMLDivElement, FormStatusProps>(
+	({ className, status, ...props }, ref) => {
+		return (
+			<div
+				ref={ref}
+				className={cn(
+					'text-base h-9 w-full rounded-full center gap-2',
+					status?.type === 'error'
+						? 'text-rose-700'
+						: status?.type === 'success'
+							? 'text-emerald-700'
+							: 'text-cyan-700',
+					className
+				)}
+				{...props}
+			>
+				{status &&
+					(status.type === 'error' ? (
+						<TriangleAlert className="h-4 w-4" />
+					) : status.type === 'success' ? (
+						<Check className="h-4 w-4" />
+					) : (
+						<CircleAlert className="h-4 w-4" />
+					))}
+				<p className="">{status?.message}</p>
+			</div>
+		);
+	}
+);
+FormStatusMessage.displayName = 'FormStatusMessage';
+
 export {
 	useFormField,
 	Form,
@@ -174,4 +210,5 @@ export {
 	FormDescription,
 	FormMessage,
 	FormField,
+	FormStatusMessage,
 };

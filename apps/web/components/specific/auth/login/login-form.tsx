@@ -1,5 +1,12 @@
 'use client';
+import { useState, useTransition } from 'react';
+import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+import { useRouter } from 'nextjs-toploader/app';
 import { z } from 'zod';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@proximity/ui/shadcn/button';
 import {
 	Form,
 	FormControl,
@@ -7,19 +14,20 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage,
+	FormStatusMessage,
 } from '@proximity/ui/shadcn/form';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import StyledInput from '@/components/shared/input/styled-input';
-import { Button } from '@proximity/ui/shadcn/button';
+
 import PasswordInput from '@/components/shared/input/password-input';
-import { useRouter } from 'nextjs-toploader/app';
-import Link from 'next/link';
+import StyledInput from '@/components/shared/input/styled-input';
 import { loginAction } from '@/actions/login-action';
 import { loginSchema } from '@/schemas/login-schema';
+import { LoginResponse } from '@/types/kratos-types';
 
 const LoginForm = () => {
 	const router = useRouter();
+	const [status, setStatus] = useState<LoginResponse>();
+	const [loading, startLoading] = useTransition();
+
 	const form = useForm<z.infer<typeof loginSchema>>({
 		resolver: zodResolver(loginSchema),
 		defaultValues: {
@@ -28,9 +36,14 @@ const LoginForm = () => {
 		},
 	});
 
-	const onSubmit = async (values: z.infer<typeof loginSchema>) => {
-		await loginAction(values);
-		router.push('/');
+	const onSubmit = (values: z.infer<typeof loginSchema>) => {
+		startLoading(async () => {
+			const res = await loginAction(values);
+			setStatus(res);
+			if (res.type === 'success') {
+				return router.push('/');
+			}
+		});
 	};
 
 	return (
@@ -40,6 +53,7 @@ const LoginForm = () => {
 					onSubmit={form.handleSubmit(onSubmit)}
 					className="flex flex-col  justify-center gap-4 full"
 				>
+					<FormStatusMessage status={status} />
 					<FormField
 						control={form.control}
 						name="email"
@@ -72,7 +86,11 @@ const LoginForm = () => {
 						)}
 					/>
 
-					<Button type="submit" className="h-14 px-7 rounded-full mt-4">
+					<Button
+						type="submit"
+						loading={loading}
+						className="h-14 px-7 rounded-full mt-4"
+					>
 						Login
 					</Button>
 

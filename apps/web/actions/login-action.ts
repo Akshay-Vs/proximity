@@ -10,10 +10,11 @@ import { LoginResponse, KratosResponse } from "@/types/kratos-types";
 export const loginAction = async (
   values: z.infer<typeof loginSchema>
 ): Promise<LoginResponse> => {
+  console.log("Login request received")
   const kratosUrl = process.env.NEXT_PUBLIC_KRATOS_PUBLIC_URL;
 
   if (!kratosUrl) {
-    return { error: "Service unavailable" };
+    return { type: 'error', message: "Service unavailable" };
   }
 
   try {
@@ -22,7 +23,7 @@ export const loginAction = async (
     const flow = flowResponse.data;
 
     if (!flow?.ui?.action) {
-      return { error: "Unable to process login" };
+      return { type: 'error', message: "Unable to process login" };
     }
 
     // Get CSRF token
@@ -32,9 +33,10 @@ export const loginAction = async (
 
     const sanitizedEmail = values.email.toLowerCase().trim();
     if (!sanitizedEmail || !values.password) {
-      return { error: "Email and password are required" };
+      return { type: 'error', message: "Email and password are required" };
     }
 
+    console.log("submitting request", flow.ui.action)
     // Submit login
     const loginResponse = await axios.post<KratosResponse>(
       flow.ui.action,
@@ -46,6 +48,7 @@ export const loginAction = async (
         remember_me: true
       }
     );
+    console.log(loginResponse)
 
     if (loginResponse.data.session_token) {
       const cookieStore = await cookies();
@@ -58,13 +61,16 @@ export const loginAction = async (
       });
 
       console.log("Login success")
-      return { success: true };
+      return { type: 'success', message: 'login successfull' };
     }
 
-    console.log("Invalid credentials")
-    return { error: "Invalid credentials" };
+    return { type: 'error', message: "Authentication failed" };
 
-  } catch {
-    return { error: "Authentication failed" };
+  } catch (err) {
+    console.log(err)
+    if (axios.isAxiosError(err)) {
+      return { type: 'error', message: "Invalid credentials" };
+    }
+    return { type: 'error', message: "Authentication failed" };
   }
 };
