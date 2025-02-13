@@ -1,5 +1,12 @@
 'use client';
+import Link from 'next/link';
 import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'nextjs-toploader/app';
+
+import StyledInput from '@/components/shared/input/styled-input';
+import { Button } from '@proximity/ui/shadcn/button';
 import {
 	Form,
 	FormControl,
@@ -7,24 +14,20 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage,
+	FormStatusMessage,
 } from '@proximity/ui/shadcn/form';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import StyledInput from '@/components/shared/input/styled-input';
-import { Button } from '@proximity/ui/shadcn/button';
 import PasswordInput from '@/components/shared/input/password-input';
-import { useRouter } from 'nextjs-toploader/app';
-import Link from 'next/link';
-const registerSchema = z.object({
-	username: z.string().min(1, { message: 'Username is required' }),
-	email: z.string().email(),
-	password: z
-		.string()
-		.min(8, { message: 'Password must contains atleast 8 characters' }),
-});
+import { registerSchema } from '@/schemas/register-schema';
+import { useState, useTransition } from 'react';
+import { RegisterResponse } from '@/types/kratos-types';
+import { registerAction } from '@/actions/register-action';
 
 const RegisterForm = () => {
 	const router = useRouter();
+
+	const [status, setStatus] = useState<RegisterResponse>();
+	const [loading, startLoading] = useTransition();
+
 	const form = useForm<z.infer<typeof registerSchema>>({
 		resolver: zodResolver(registerSchema),
 		defaultValues: {
@@ -35,10 +38,11 @@ const RegisterForm = () => {
 	});
 
 	function onSubmit(values: z.infer<typeof registerSchema>) {
-		//TODO add register logic here
-
-		router.push('/');
-		console.log(values);
+		startLoading(async () => {
+			const registration = await registerAction(values);
+			setStatus(registration);
+			if (registration.type === 'success') return router.push('/');
+		});
 	}
 
 	return (
@@ -48,6 +52,7 @@ const RegisterForm = () => {
 					onSubmit={form.handleSubmit(onSubmit)}
 					className="flex flex-col  justify-center gap-4 full"
 				>
+					<FormStatusMessage status={status} />
 					<FormField
 						control={form.control}
 						name="username"
@@ -93,7 +98,11 @@ const RegisterForm = () => {
 						)}
 					/>
 
-					<Button type="submit" className="h-14 px-7 rounded-full mt-4">
+					<Button
+						type="submit"
+						className="h-14 px-7 rounded-full mt-4"
+						loading={loading}
+					>
 						Register
 					</Button>
 
