@@ -1,6 +1,6 @@
 type LoginResponse = {
-  success?: boolean;
-  error?: string;
+  type: 'error' | 'success' | 'info';
+  message: string;
 };
 
 type KratosResponse = {

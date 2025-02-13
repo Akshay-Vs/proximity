@@ -1,6 +1,8 @@
 import { Geist, Jost } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
 
+import { TooltipProvider } from '@proximity/ui/shadcn/tooltip';
+
 import { myMetadata, myViewport } from '@/pwa';
 
 import '@proximity/ui/styles.css';
@@ -30,7 +32,7 @@ const RootLayout = ({
 				<div className="absolute top-0 left-0 w-full h-2">
 					<NextTopLoader color="#484848" shadow="none" showSpinner={false} />
 				</div>
-				{children}
+				<TooltipProvider>{children}</TooltipProvider>
 			</body>
 		</html>
 	);

@@ -2,6 +2,8 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/src/utils/cn';
+import { LoaderCircle } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from './tooltip';
 
 const buttonVariants = cva(
 	'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
@@ -37,20 +39,41 @@ const buttonVariants = cva(
 
 export interface ButtonProps
 	extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-		VariantProps<typeof buttonVariants> {}
+		VariantProps<typeof buttonVariants> {
+	loading?: boolean;
+	tooltip?: string;
+}
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-	({ className, variant, size, ...props }, ref) => {
+	({ className, variant, size, children, loading, tooltip, ...props }, ref) => {
 		// const Comp = asChild ? Slot : 'button';
 		return (
-			<button
-				className={cn(buttonVariants({ variant, size, className }))}
-				ref={ref}
-				{...props}
-			/>
+			<Tooltip>
+				<TooltipTrigger asChild>
+					<button
+						className={cn(buttonVariants({ variant, size, className }))}
+						ref={ref}
+						disabled={loading}
+						{...props}
+					>
+						{loading ? (
+							<LoaderCircle className="text-inherit animate-spin" />
+						) : (
+							children
+						)}
+					</button>
+				</TooltipTrigger>
+
+				{tooltip && (
+					<TooltipContent>
+						<p className="text-sm text-black">{tooltip}</p>
+					</TooltipContent>
+				)}
+			</Tooltip>
 		);
 	}
 );
+
 Button.displayName = 'Button';
 
 export { Button, buttonVariants };
