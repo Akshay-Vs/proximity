@@ -38,10 +38,14 @@ const LoginForm = () => {
 
 	const onSubmit = (values: z.infer<typeof loginSchema>) => {
 		startLoading(async () => {
-			const res = await loginAction(values);
-			setStatus(res);
-			if (res.type === 'success') {
-				return router.push('/');
+			try {
+				const res = await loginAction(values);
+				setStatus(res);
+				if (res.type === 'success') {
+					return router.push('/');
+				}
+			} catch (error) {
+				setStatus({ type: 'error', message: 'An unexpected error occurred' });
 			}
 		});
 	};
