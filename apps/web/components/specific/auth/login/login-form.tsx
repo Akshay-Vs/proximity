@@ -44,7 +44,7 @@ const LoginForm = () => {
 				if (res.type === 'success') {
 					return router.push('/');
 				}
-			} catch (error) {
+			} catch {
 				setStatus({ type: 'error', message: 'An unexpected error occurred' });
 			}
 		});
