@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
   try {
     const sessionToken = request.cookies.get("session_token");
 
-    // Redirect if there's no session token
+    // Redirect to login if no session token exists
     if (!sessionToken?.value) {
       return createRedirectResponse(request);
     }
@@ -33,30 +33,41 @@ export async function middleware(request: NextRequest) {
 
     if (!sessionResponse.ok) {
       console.log("Session validation failed:", sessionResponse.status);
+
+      // Try refreshing session silently
+      const refreshResponse = await fetch(`${KRATOS_PUBLIC_URL}/self-service/login/browser`, {
+        headers: {
+          Cookie: `session_token=${sessionToken.value}`,
+          Accept: "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (refreshResponse.ok) {
+        console.log("Session refreshed successfully");
+        const refreshData = await refreshResponse.json();
+
+        const response = NextResponse.next();
+        response.headers.set(
+          "Set-Cookie",
+          `session_token=${refreshData.session_token}; Path=/; HttpOnly; Secure; SameSite=Lax`
+        );
+        return response;
+      }
+
+      // If refresh fails, redirect to login
       return createRedirectResponse(request);
     }
 
-    // Create the response and set security headers
+    // Create response and apply security headers
     const response = NextResponse.next();
-    response.headers.set("X-Frame-Options", "DENY");
-    response.headers.set("X-Content-Type-Options", "nosniff");
-    response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-    response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
-    response.headers.set("x-middleware-cache", "no-cache");
-
-    // Mark request as validated to prevent duplicate validation
-    response.headers.set("x-kratos-validated", "true");
+    setSecurityHeaders(response);
 
     // Preserve session cookie
     response.headers.set(
       "Set-Cookie",
       `session_token=${sessionToken.value}; Path=/; HttpOnly; Secure; SameSite=Lax`
     );
-
-    // Enable Strict-Transport-Security in production
-    if (process.env.NODE_ENV === "production") {
-      response.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
-    }
 
     return response;
   } catch (error) {
@@ -77,17 +88,25 @@ function createRedirectResponse(request: NextRequest) {
     );
   }
 
-  // Set security headers
+  setSecurityHeaders(response);
+  return response;
+}
+
+function setSecurityHeaders(response: NextResponse) {
   response.headers.set("X-Frame-Options", "DENY");
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  response.headers.set("x-middleware-cache", "no-cache");
 
-  return response;
+  if (process.env.NODE_ENV === "production") {
+    response.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  }
 }
 
 // Optimize the matcher to exclude API routes
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|auth|api).*)", // Only run on actual page navigations
+    "/((?!_next/static|_next/image|favicon.ico|auth|api).*)",
   ],
 };

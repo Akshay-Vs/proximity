@@ -30,10 +30,6 @@ export const loginAction = async (
       (node: { attributes: { name: string; }; }) => node.attributes.name === "csrf_token"
     )?.attributes.value;
 
-    // if (!csrfToken) {
-    //   return { error: "Invalid login flow - missing CSRF token" };
-    // }
-
     const sanitizedEmail = values.email.toLowerCase().trim();
     if (!sanitizedEmail || !values.password) {
       return { error: "Email and password are required" };
@@ -47,6 +43,7 @@ export const loginAction = async (
         method: "password",
         password: values.password,
         password_identifier: sanitizedEmail,
+        remember_me: true
       }
     );
 
@@ -57,8 +54,6 @@ export const loginAction = async (
         httpOnly: true,
         secure: true,
         path: "/",
-        sameSite: "lax",
-        maxAge: 60 * 60 * 24 * 7, // 7 days
         priority: "high"
       });
 
