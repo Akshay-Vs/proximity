@@ -42,6 +42,13 @@ const UseLoginForm = () => {
           });
         }
 
+        if (!csrf_token) {
+          return setStatus({
+            type: 'error',
+            message: 'csrf verification failed, refresh and try again'
+          })
+        }
+
         const login = await ory.updateLoginFlow({
           flow,
           updateLoginFlowBody: {
