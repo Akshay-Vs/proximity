@@ -1,9 +1,5 @@
 'use client';
 import Link from 'next/link';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'nextjs-toploader/app';
 
 import StyledInput from '@/components/shared/input/styled-input';
 import { Button } from '@proximity/ui/shadcn/button';
@@ -17,48 +13,24 @@ import {
 	FormStatusMessage,
 } from '@proximity/ui/shadcn/form';
 import PasswordInput from '@/components/shared/input/password-input';
-import { registerSchema } from '@/schemas/register-schema';
-import { useState, useTransition } from 'react';
-import { RegisterResponse } from '@/types/kratos-types';
-import { registerAction } from '@/actions/register-action';
+import { useRegisterForm } from '@/hooks/use-register-form';
 
 const RegisterForm = () => {
-	const router = useRouter();
-
-	const [status, setStatus] = useState<RegisterResponse>();
-	const [loading, startLoading] = useTransition();
-
-	const form = useForm<z.infer<typeof registerSchema>>({
-		resolver: zodResolver(registerSchema),
-		defaultValues: {
-			username: '',
-			email: '',
-			password: '',
-		},
-	});
-
-	function onSubmit(values: z.infer<typeof registerSchema>) {
-		startLoading(async () => {
-			const registration = await registerAction(values);
-			setStatus(registration);
-			if (registration.type === 'success') return router.push('/');
-		});
-	}
-
+	const { form, status, loading, initiateRegister } = useRegisterForm();
 	return (
 		<div className="w-full center flex flex-col">
 			<Form {...form}>
 				<form
-					onSubmit={form.handleSubmit(onSubmit)}
+					onSubmit={form.handleSubmit(initiateRegister)}
 					className="flex flex-col  justify-center gap-4 full"
 				>
 					<FormStatusMessage status={status} />
 					<FormField
 						control={form.control}
-						name="username"
+						name="fullname"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Username</FormLabel>
+								<FormLabel>Full Name</FormLabel>
 								<FormControl>
 									<StyledInput placeholder="Evelin Violet" {...field} />
 								</FormControl>
