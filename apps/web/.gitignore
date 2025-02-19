@@ -42,3 +42,5 @@ next-env.d.ts
 
 # serwist
 /public/sw.js
+
+certificates
