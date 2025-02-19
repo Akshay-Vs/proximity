@@ -10,7 +10,7 @@
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^3.10.0",
-		"@ory/client": "^1.16.6",
+		"@ory/client": "^1.16.7",
 		"@proximity/tailwind-config": "workspace:*",
 		"@proximity/ui": "workspace:*",
 		"@serwist/next": "^9.0.11",
