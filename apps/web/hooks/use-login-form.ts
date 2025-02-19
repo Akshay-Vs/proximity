@@ -75,8 +75,6 @@ const UseLoginForm = () => {
       }
 
       catch (error) {
-        console.error(error);
-
         if (error instanceof AxiosError) {
           const res = error.response?.data as LoginFlow
           const code = getOryMessageId(res)
@@ -96,6 +94,11 @@ const UseLoginForm = () => {
               });
           }
         }
+
+        setStatus({
+          type: 'error',
+          message: 'Something went wrong',
+        });
       }
     });
   };
