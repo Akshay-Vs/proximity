@@ -3,6 +3,8 @@ type LoginResponse = {
   message: string;
 };
 
+type RegisterResponse = LoginResponse
+
 type KratosResponse = {
   session_token: string;
   session: {
@@ -15,4 +17,4 @@ type KratosResponse = {
   };
 };
 
-export type { KratosResponse, LoginResponse }
+export type { KratosResponse, LoginResponse, RegisterResponse }

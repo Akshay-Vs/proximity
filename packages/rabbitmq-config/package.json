@@ -1,0 +1,30 @@
+{
+	"name": "rabbitmq-config",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"type": "module",
+	"files": [
+		"dist"
+	],
+	"exports": {
+		"./*": {
+			"import": "./dist/conf/index.mjs",
+			"types": "./dist/conf/index.d.ts"
+		}
+	},
+	"scripts": {
+		"build": "tsup",
+		"postinstall": "pnpm build"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"tsup": "^8.3.5",
+		"@proximity/typescript-config": "workspace:*",
+		"@types/node": "^22.10.5",
+		"ts-node": "^10.9.2",
+		"typescript": "5.7.3"
+	}
+}

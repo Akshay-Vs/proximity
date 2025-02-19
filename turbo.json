@@ -19,6 +19,9 @@
 		},
 		"clean": {
 			"cache": false
+		},
+		"deploy": {
+			"dependsOn": ["build"]
 		}
 	}
 }
