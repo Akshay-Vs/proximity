@@ -1,0 +1,183 @@
+replicaCount: 1
+
+image:
+  repository: oryd/kratos
+  tag: v1.3.1
+  pullPolicy: IfNotPresent
+
+autoMigrate: true
+
+kratos:
+  config:
+    version: v1.3.1
+    dsn: 'memory' # Use a real DSN for production!
+    dev: true
+    log:
+      level: debug
+
+    session:
+      cookie:
+        domain: https://proximity.local:3000
+        same_site: None
+
+    serve:
+      public:
+        base_url: 'http://proximity.local/kratos/public'
+        cors:
+          enabled: true
+          allowed_origins:
+            - https://proximity.local:3000
+            - https://*.proximity.local:3000
+          allowed_methods:
+            - POST
+            - GET
+            - PUT
+            - PATCH
+            - DELETE
+          allowed_headers:
+            - Authorization
+            - Cookie
+            - Content-Type
+          exposed_headers:
+            - Content-Type
+            - Set-Cookie
+      admin:
+        base_url: 'http://proximity.local/kratos/admin'
+
+    selfservice:
+      methods:
+        password:
+          enabled: true
+      default_browser_return_url: 'https://proximity.local'
+
+      flows:
+        login:
+          ui_url: 'https://proximity.local:3000/auth/login'
+        registration:
+          ui_url: 'https://proximity.local:3000/auth/register'
+
+    identity:
+      default_schema_id: identity.default
+      schemas:
+        - id: identity.default
+          url: 'file:///etc/config/identity.default.schema.json'
+    secrets:
+      cookie:
+        - 'G77dzwaX8i6pBqxZqc0FWsK8XhYp1xvw'
+      cipher:
+        - 'MHAkTdyHmZp8utfqjnoGI3RSkP8y4iPF'
+
+  # Provide your identity schema under the official key:
+  identitySchemas:
+    'identity.default.schema.json': |
+      {
+        "$id": "https://schemas.ory.sh/presets/kratos/quickstart/email-password/identity.schema.json",
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "Person",
+        "type": "object",
+        "properties": {
+          "traits": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "format": "email",
+                "title": "E-Mail",
+                "minLength": 3,
+                "ory.sh/kratos": {
+                  "credentials": {
+                    "password": {
+                      "identifier": true
+                    }
+                  },
+                  "verification": {
+                    "via": "email"
+                  },
+                  "recovery": {
+                    "via": "email"
+                  }
+                }
+              },
+              "name": {
+                "type": "object",
+                "properties": {
+                  "first": {
+                    "title": "First Name",
+                    "type": "string"
+                  },
+                  "last": {
+                    "title": "Last Name",
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "required": ["email"],
+            "additionalProperties": false
+          }
+        }
+      }
+
+service:
+  public:
+    enabled: true
+    type: ClusterIP
+    port: 80
+    name: http
+    allowed_origins:
+      - https://proximity.local:3000
+      - https://*.proximity.local:3000
+    allowed_methods:
+      - POST
+      - GET
+      - PUT
+      - PATCH
+      - DELETE
+    allowed_headers:
+      - Authorization
+      - Cookie
+      - Content-Type
+    exposed_headers:
+      - Content-Type
+      - Set-Cookie
+
+  admin:
+    enabled: true
+    type: ClusterIP
+    port: 80
+    name: http
+
+  courier:
+    enabled: true
+    type: ClusterIP
+    port: 80
+    name: http
+
+ingress:
+  admin:
+    enabled: false
+    className: ''
+    hosts:
+      - host: admin.kratos.proximity.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+
+  public:
+    enabled: true
+    className: ''
+    hosts:
+      - host: public.kratos.proximity.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+
+resources:
+  limits:
+    cpu: '500m'
+    memory: '512Mi'
+  requests:
+    cpu: '250m'
+    memory: '256Mi'

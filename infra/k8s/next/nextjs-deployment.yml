@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextjs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nextjs
+  template:
+    metadata:
+      labels:
+        app: nextjs
+    spec:
+      containers:
+        - name: nextjs
+          image: nextjs-app
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NEXT_PUBLIC_KRATOS_PUBLIC_URL
+              value: 'http://public.kratos.proximity.local',
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nextjs
+spec:
+  selector:
+    app: nextjs
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
