@@ -17,8 +17,8 @@ export const getSession = async (request: NextRequest) => {
     if (!response.ok) return null
 
     return await response.json()
-  } catch (error) {
-    console.error('Session fetch error:', error)
+  } catch {
+    console.error('Session fetch error')
     return null
   }
 }

@@ -59,7 +59,7 @@ export const useRegisterForm = () => {
             password: values.password,
             traits: {
               email: values.email,
-              // username: values.fullname
+              // username: values.fullname //TODO
             }
           }
         })
