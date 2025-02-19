@@ -28,7 +28,7 @@
 		"dompurify": "^3.2.3",
 		"emoji-regex": "^10.4.0",
 		"fastify": "^5.2.1",
-		"puppeteer": "^24.0.0",
+		"puppeteer": "^24.2.1",
 		"sanitize-html": "^2.14.0",
 		"xss": "^1.0.15",
 		"zod": "^3.24.1"
