@@ -6,71 +6,76 @@ import { cookies } from "next/headers";
 import axios from "axios";
 import { LoginResponse, KratosResponse } from "@/types/kratos-types";
 
-
 export const loginAction = async (
-  values: z.infer<typeof loginSchema>
+  values: z.infer<typeof loginSchema>,
+  flowId: string // ✅ Accept flow ID from client
 ): Promise<LoginResponse> => {
-  console.log("Login request received")
-  const kratosUrl = process.env.NEXT_PUBLIC_KRATOS_PUBLIC_URL;
+  console.log("Login request received with flow ID:", flowId);
 
+  const kratosUrl = process.env.NEXT_PUBLIC_KRATOS_PUBLIC_URL;
   if (!kratosUrl) {
-    return { type: 'error', message: "Service unavailable" };
+    return { type: "error", message: "Service unavailable" };
   }
 
   try {
-    // Get login flow
-    const flowResponse = await axios.get(`${kratosUrl}/self-service/login/api`);
-    const flow = flowResponse.data;
+    // Fetch the login flow using the correct flow ID
+    const { data: flow } = await axios.get(`${kratosUrl}/self-service/login/flows?id=${flowId}`);
 
+    console.log("Flow:", JSON.stringify(flow));
     if (!flow?.ui?.action) {
-      return { type: 'error', message: "Unable to process login" };
+      return { type: "error", message: "Invalid or expired login session. Refresh and try again." };
     }
 
-    // Get CSRF token
+    // Extract CSRF token safely
     const csrfToken = flow.ui.nodes.find(
-      (node: { attributes: { name: string; }; }) => node.attributes.name === "csrf_token"
-    )?.attributes.value;
+      (node: { attributes?: { name?: string; value?: string } }) =>
+        node.attributes?.name === "csrf_token"
+    )?.attributes?.value;
+
+    if (!csrfToken) {
+      return { type: "error", message: "CSRF token not found" };
+    }
 
     const sanitizedEmail = values.email.toLowerCase().trim();
     if (!sanitizedEmail || !values.password) {
-      return { type: 'error', message: "Email and password are required" };
+      return { type: "error", message: "Email and password are required" };
     }
 
-    console.log("submitting request", flow.ui.action)
-    // Submit login
-    const loginResponse = await axios.post<KratosResponse>(
-      flow.ui.action,
-      {
-        csrf_token: csrfToken,
-        method: "password",
-        password: values.password,
-        password_identifier: sanitizedEmail,
-        remember_me: true
-      }
-    );
-    console.log(loginResponse)
+    console.log("Submitting login request to:", flow.ui.action);
 
-    if (loginResponse.data.session_token) {
-      const cookieStore = await cookies();
+    // Submit login request
+    const { data: loginResponse } = await axios.post<KratosResponse>(flow.ui.action, {
+      csrf_token: csrfToken,
+      method: "password",
+      password: values.password,
+      password_identifier: sanitizedEmail,
+      remember_me: true,
+    });
 
-      cookieStore.set("session_token", loginResponse.data.session_token, {
-        httpOnly: true,
-        secure: true,
-        path: "/",
-        priority: "high"
-      });
+    console.log("Login Response:", loginResponse);
 
-      console.log("Login success")
-      return { type: 'success', message: 'login successfull' };
+    if (loginResponse.session_token) {
+      // Set session token securely
+      (await
+        // Set session token securely
+        cookies()).set("session_token", loginResponse.session_token, {
+          httpOnly: true,
+          secure: true,
+          path: "/",
+          sameSite: "strict",
+          priority: "high",
+        });
+
+      console.log("Login successful");
+      return { type: "success", message: "Login successful" };
     }
 
-    return { type: 'error', message: "Authentication failed" };
-
+    return { type: "error", message: "Authentication failed" };
   } catch (err) {
-    console.log(err)
+    console.error("Login error:", err);
     if (axios.isAxiosError(err)) {
-      return { type: 'error', message: "Invalid credentials" };
+      return { type: "error", message: err.response?.data?.error?.message || "Invalid credentials" };
     }
-    return { type: 'error', message: "Authentication failed" };
+    return { type: "error", message: "Authentication failed" };
   }
 };

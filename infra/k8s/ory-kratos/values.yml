@@ -22,12 +22,12 @@ kratos:
 
     serve:
       public:
-        base_url: 'http://proximity.local/kratos/public'
+        base_url: 'https://proximity.local/kratos/public'
         cors:
           enabled: true
           allowed_origins:
             - https://proximity.local:3000
-            - https://*.proximity.local:3000
+            - http://*.proximity.local:3000
           allowed_methods:
             - POST
             - GET
@@ -42,13 +42,16 @@ kratos:
             - Content-Type
             - Set-Cookie
       admin:
-        base_url: 'http://proximity.local/kratos/admin'
+        base_url: 'https://proximity.local/kratos/admin'
 
     selfservice:
       methods:
         password:
           enabled: true
+
       default_browser_return_url: 'https://proximity.local'
+      allowed_return_urls:
+        - 'https://proximity.local'
 
       flows:
         login:
