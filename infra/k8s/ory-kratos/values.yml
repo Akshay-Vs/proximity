@@ -17,7 +17,7 @@ kratos:
 
     session:
       cookie:
-        domain: https://proximity.local:3000
+        domain: proximity.local
         same_site: None
 
     serve:
@@ -27,7 +27,8 @@ kratos:
           enabled: true
           allowed_origins:
             - https://proximity.local:3000
-            - http://*.proximity.local:3000
+            - https://*.proximity.local:3000
+            - https://proximity.local
           allowed_methods:
             - POST
             - GET
@@ -101,21 +102,15 @@ kratos:
                   }
                 }
               },
-              "name": {
-                "type": "object",
-                "properties": {
-                  "first": {
-                    "title": "First Name",
-                    "type": "string"
-                  },
-                  "last": {
-                    "title": "Last Name",
-                    "type": "string"
-                  }
-                }
+              "fullname": {
+                "type": "string",
+                "title": "Full Name"
               }
             },
-            "required": ["email"],
+            "required": [
+              "email",
+              "fullname"
+            ],
             "additionalProperties": false
           }
         }
@@ -175,7 +170,10 @@ ingress:
         paths:
           - path: /
             pathType: Prefix
-    tls: []
+    tls:
+      - hosts:
+          - public.kratos.proximity.local
+        secretName: proximity-tls
 
 resources:
   limits:

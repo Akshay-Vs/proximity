@@ -59,7 +59,7 @@ export const useRegisterForm = () => {
             password: values.password,
             traits: {
               email: values.email,
-              // username: values.fullname //TODO
+              fullname: values.fullname
             }
           }
         })
@@ -87,7 +87,7 @@ export const useRegisterForm = () => {
             case 4000028:
               return setStatus({
                 type: 'error',
-                message: 'Email already taken',
+                message: 'Email is already taken',
               });
 
             case 4000034:
