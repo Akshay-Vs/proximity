@@ -6,7 +6,6 @@ from llm import LLM  # Import the LLM class
 
 app = FastAPI()
 
-
 # CORS
 app.add_middleware(
     CORSMiddleware,
