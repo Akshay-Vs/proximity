@@ -42,38 +42,38 @@ async def root():
 @app.post("/generate")
 async def generate(req: Request):
     print("Received request")
-    # try:
-    body = await req.json()
-    # initialize the validators
-    input_validator = Draft7Validator(input_schema)
+    try:
+        body = await req.json()
+        # initialize the validators
+        input_validator = Draft7Validator(input_schema)
 
-    # validate the input
-    print("Validating input...")
-    input_errors = list(input_validator.iter_errors(body))
-    if input_errors:
-        print(input_errors)
-        error_messages = [
-            {"path": list(input_errors.path), "message": input_errors.message}
-            for input_errors in input_errors
-        ]
+        # validate the input
+        print("Validating input...")
+        input_errors = list(input_validator.iter_errors(body))
+        if input_errors:
+            print(input_errors)
+            error_messages = [
+                {"path": list(input_errors.path), "message": input_errors.message}
+                for input_errors in input_errors
+            ]
+            return JSONResponse(
+                status_code=400,
+                content={"error": "Validation failed", "errors": error_messages},
+            )
+
+        # generate the response
+        generated_response = await generate_with_retry(model, json.dumps(body))
+
+        if (generated_response is None) or (generated_response == ""):
+            return JSONResponse(
+                status_code=500,
+                content={"error": "An error occurred while processing."},
+            )
+
+        return JSONResponse(status_code=200, content=generated_response)
+
+    except Exception as e:
+        print(e)
         return JSONResponse(
-            status_code=400,
-            content={"error": "Validation failed", "errors": error_messages},
+            status_code=500, content={"error": "An error occurred while processing."}
         )
-
-    # generate the response
-    generated_response = await generate_with_retry(model, json.dumps(body))
-
-    if (generated_response is None) or (generated_response == ""):
-        return JSONResponse(
-            status_code=500,
-            content={"error": "An error occurred while processing."},
-        )
-
-    return JSONResponse(status_code=200, content=generated_response)
-
-    # except Exception as e:
-    #     print(e)
-    #     return JSONResponse(
-    #         status_code=500, content={"error": "An error occurred while processing."}
-    #     )
