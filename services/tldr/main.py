@@ -7,7 +7,6 @@ from llm import LLM  # Import the LLM class
 app = FastAPI()
 
 
-
 # CORS
 app.add_middleware(
     CORSMiddleware,
@@ -25,7 +24,7 @@ model = None
 async def load_model():
     global model
     model = LLM(
-        model_path="./models/Llama-3.2-1B-Instruct-Q4_K_M.gguf",
+        model_path="../models/Llama-3.2-1B-Instruct-Q4_K_M.gguf",
         temperature=0.3,
         max_tokens=512,
         context_window=4096,  # Reduced for better performance
@@ -54,6 +53,11 @@ app.add_middleware(
 
 # Initialize LLM in the background to avoid blocking the API
 model = None
+
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the Proximity API!"}
 
 
 @app.on_event("startup")
