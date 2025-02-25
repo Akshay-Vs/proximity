@@ -23,46 +23,6 @@ model = None
 async def load_model():
     global model
     model = LLM(
-        model_path="../models/Llama-3.2-1B-Instruct-Q4_K_M.gguf",
-        temperature=0.3,
-        max_tokens=512,
-        context_window=4096,  # Reduced for better performance
-        n_gpu_layers=-1,
-        n_batch=512,
-    )
-    print("LLM Model Loaded Successfully")
-
-
-from fastapi import FastAPI, Request
-from fastapi.responses import StreamingResponse, JSONResponse
-from fastapi.middleware.cors import CORSMiddleware
-import asyncio
-from llm import LLM  # Import the LLM class
-
-app = FastAPI()
-
-# CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Initialize LLM in the background to avoid blocking the API
-model = None
-
-
-@app.get("/")
-async def root():
-    return {"message": "Welcome to the Proximity API!"}
-
-
-@app.on_event("startup")
-async def load_model():
-    global model
-    model = LLM(
         model_path="./models/Llama-3.2-1B-Instruct-Q4_K_M.gguf",
         temperature=0.3,
         max_tokens=512,
@@ -71,6 +31,11 @@ async def load_model():
         n_batch=512,
     )
     print("LLM Model Loaded Successfully")
+
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the Proximity API!"}
 
 
 @app.post("/generate")
