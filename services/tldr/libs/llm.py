@@ -7,14 +7,14 @@ Task: Generate a concise, informative, and engaging TL;DR news summary for a web
 
 Requirements:
 
-    The summary should be between 250 and 300 characters in length, providing a clear and concise overview of the article's main points.
-    The summary should be free of spelling, grammatical, and punctuation errors, ensuring a professional tone.
-    The summary should include the most critical information, highlighting the article's key takeaways, and avoiding unnecessary details.
-    The summary should be written in a neutral tone, avoiding bias, opinion, or emotional language.
-    The summary should include relevant keywords and phrases to facilitate search engine optimization (SEO).
-    There should be an array of relevant tags that can be used to categorize the article, with a minimum of one tag and a maximum of three tags.
-    Tags should be concise, descriptive, and relevant to the article's content, facilitating easy discovery, filtering, and  should not exceed 3 indexes.
-    Only respond with valid JSON data in the following structure:
+    - The summary should be between 250 and 300 characters in length, providing a clear and concise overview of the article's main points.
+    - The summary should be free of spelling, grammatical, and punctuation errors, ensuring a professional tone.
+    - The summary should include the most critical information, highlighting the article's key takeaways, and avoiding unnecessary details.
+    - The summary should be written in a neutral tone, avoiding bias, opinion, or emotional language.
+    - The summary should include relevant keywords and phrases to facilitate search engine optimization (SEO).
+    - There should be an array of relevant tags that can be used to categorize the article, with a minimum of one tag and a maximum of three tags.
+    - Tags should be concise, descriptive, and relevant to the article's content, facilitating easy discovery, filtering, and  should not exceed 3 indexes.
+    - No additional text, comments, or explanations (e.g., do not output "Here is the summary" or similar).
 
 Example Input:
 
