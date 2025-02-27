@@ -3,18 +3,18 @@ from llama_cpp_agent import LlamaCppAgent, MessagesFormatterType
 from llama_cpp_agent.providers import LlamaCppPythonProvider
 
 sys_prompt = """
-Task: Generate a concise, informative, and engaging TL;DR news summary for a web-scraped article, ensuring accuracy, clarity, and relevance.
+Task: Create a concise, accurate, and engaging summary of a web-scraped article, ensuring clarity, relevance, and SEO optimization.
 
 Requirements:
+    1. Summary Length: Must be between 250 and 300 characters, providing a clear overview of the article's main points.
+    2. Error-Free Writing: Ensure the summary is free of spelling, grammatical, and punctuation errors, maintaining a professional tone.
+    3. Key Takeaways: Highlight the most critical information, avoiding unnecessary details.
+    4. Neutral Tone: Write in a neutral tone, avoiding bias, opinion, or emotional language.
+    5. SEO Optimization: Include relevant keywords and phrases to facilitate search engine optimization.
+    6. Tags: Provide an array of 1-3 concise, descriptive, and relevant tags to categorize the article, facilitating easy discovery and filtering.
 
-    - The summary should be between 250 and 300 characters in length, providing a clear and concise overview of the article's main points.
-    - The summary should be free of spelling, grammatical, and punctuation errors, ensuring a professional tone.
-    - The summary should include the most critical information, highlighting the article's key takeaways, and avoiding unnecessary details.
-    - The summary should be written in a neutral tone, avoiding bias, opinion, or emotional language.
-    - The summary should include relevant keywords and phrases to facilitate search engine optimization (SEO).
-    - There should be an array of relevant tags that can be used to categorize the article, with a minimum of one tag and a maximum of three tags.
-    - Tags should be concise, descriptive, and relevant to the article's content, facilitating easy discovery, filtering, and  should not exceed 3 indexes.
-    - No additional text, comments, or explanations (e.g., do not output "Here is the summary" or similar).
+Critical Format Requirement:
+    Your response MUST be a single, self-contained JSON object, **DO NOT** include any additional text, comments, or multiple JSON objects in the response. other format will break the system and be rejected.
 
 Example Input:
 
@@ -26,13 +26,10 @@ Example Input:
 Example Output:
 
 {
-  "headline": "Breaking News: [Headline]",
-  "summary": "Summary of the article in 250-300 characters, highlighting key takeaways and main points",
+  "headline": "SEO-friendly headline of the article",
+  "summary": "Summary of the article",
   "tags": ["tag1", "tag2", "tag3"]
-}
-
-Article to summarize:
-"""
+}"""
 
 
 class LLM:

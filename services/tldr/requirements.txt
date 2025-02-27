@@ -8,3 +8,4 @@ black>=22.3.0
 
 # Production Dependencies
 uvicorn[standard]>=0.15.0  # for production server features
+jsonschema>=4.23.0 # for validation
