@@ -1,18 +1,72 @@
+from typing import Any, Optional
 from jsonschema import Draft7Validator
-from schema.output_schema import output_schema
-
 import json
+import logging
+
+from schema.output_schema import output_schema
+from errors.validation_error import ValidationError
+from errors.invalid_json_error import InvalidJSONError
+
+# Constants
+MAX_DEFAULT_RETRIES = 3
+ERROR_TEMPLATE = """
+Error: Invalid JSON Response
+
+We Couldn't generate a summary because the response wasn't in the correct JSON format. To fix this, please make sure your response exactly matches the expected format below:
+
+Expected JSON format:
+{
+  "headline": "SEO-friendly headline of the article",
+  "summary": "Summary of the article",
+  "tags": ["tag1", "tag2", "tag3"]
+}
+
+Critical Format Requirement:
+    Your response MUST be a single, self-contained JSON object, **DO NOT** include any additional text, comments, or multiple JSON objects in the response. other format will break the system and be rejected.
 
 
-async def generate_with_retry(model, prompt, acc=0, max_retries=3):
+Article to Summarize:
+"""
+
+logger = logging.getLogger(__name__)
+
+
+async def validate_response(response: dict) -> None:
+    """Validate the response against the schema."""
+    output_validator = Draft7Validator(output_schema)
+    validation_errors = list(output_validator.iter_errors(response))
+
+    if validation_errors:
+        logger.error(f"Validation errors: {validation_errors}")
+        raise ValidationError(json.dumps(validation_errors))
+
+
+async def parse_response(chunks: list[str]) -> dict:
+    """Parse the response chunks into JSON."""
+    try:
+        full_response = json.loads("".join(chunks))
+        logger.info("Response parsed successfully")
+        return full_response
+    except json.JSONDecodeError as e:
+        logger.error(f"Error parsing JSON: {e}")
+        print("chunks: ", "".join(chunks))
+        raise InvalidJSONError("Invalid JSON format") from e
+
+
+async def generate_with_retry(
+    model: Any,
+    prompt: str,
+    max_retries: int = MAX_DEFAULT_RETRIES,
+    current_attempt: int = 0,
+) -> Optional[dict]:
     """
     Asynchronously generates a response using the provided model and retries if validation errors occur.
 
     Args:
         model: The model used to generate the response.
         prompt: The input prompt for the model.
-        acc: The current retry count (default is 0).
-        max_retries: The maximum number of retries allowed (default is 3).
+        max_retries: The maximum number of retries allowed.
+        current_attempt: The current retry count.
 
     Returns:
         The generated response if successful, or None if the maximum number of retries is reached.
@@ -20,43 +74,41 @@ async def generate_with_retry(model, prompt, acc=0, max_retries=3):
     Raises:
         Exception: If an error occurs during the generation process.
     """
-    if acc > max_retries:
-        # If the maximum number of retries is reached, return None
-        print(f"Max retries reached {acc}. Returning None.")
+    if current_attempt > max_retries:
+        logger.warning(f"Max retries reached ({max_retries})")
         return None
 
     try:
-        print(f"Generating response...")
-        generated_response = []
+        logger.info(
+            f"Generating response (attempt {current_attempt + 1}/{max_retries + 1})..."
+        )
+        generated_chunks = []
 
-        # stream the response
-        async for chunk in model.generate_response(prompt).__aiter__():
-            # Decode the chunk if it is in bytes
+        async for chunk in model.generate_response(
+            "Article to Summarize: " + prompt
+        ).__aiter__():
             if isinstance(chunk, bytes):
                 chunk = chunk.decode("utf-8")
-            generated_response.append(chunk)
+            generated_chunks.append(chunk)
 
-        # Join all chunks into a single response
-        full_response = json.loads("".join(generated_response))
-        print(f"Response generated successfully", full_response)
+        response = await parse_response(generated_chunks)
+        await validate_response(response)
 
-        # Initialize the output validator
-        output_validator = Draft7Validator(output_schema)
+        logger.info("Response validation successful")
+        return response
 
-        # Validate the output
-        validation_errors = list(output_validator.iter_errors(full_response))
-        if validation_errors:
-            print(f"Validation errors: {validation_errors}")
-            # Create a more concise error prompt to avoid prompt explosion
-            error_prompt = f"Validation error occurred. Please fix the following issues: {validation_errors}, Here is the failed json: {full_response}, Here is the full article: {prompt}"
-            return await generate_with_retry(model, error_prompt, acc + 1, max_retries)
+    except (InvalidJSONError, ValidationError) as e:
+        logger.error(f"Error generating response: {e}")
+        print(f"Retrying ({current_attempt + 1}/{max_retries})...")
 
-        print("Validation successful.")
-        return full_response
+        error_prompt = ERROR_TEMPLATE + prompt
+
+        print(error_prompt)
+
+        return await generate_with_retry(
+            model, error_prompt, max_retries, current_attempt + 1
+        )
 
     except Exception as e:
-        print(f"Error generating response: {e}")
-        if acc < max_retries:
-            print(f"Retrying ({acc + 1}/{max_retries})...")
-            return await generate_with_retry(model, prompt, acc + 1, max_retries)
-        return None
+        logger.error(f"Error generating response: {e}")
+        raise e
