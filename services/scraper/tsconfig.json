@@ -8,6 +8,6 @@
 			"@/*": ["./*"]
 		}
 	},
-	"include": ["./**/*"],
+	"include": ["./**/*", "../crawler/src"],
 	"exclude": ["dist", "build", "node_modules"]
 }

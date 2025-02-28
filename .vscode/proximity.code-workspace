@@ -9,6 +9,14 @@
 			"path": "../apps/web"
 		},
 		{
+			"name": "📦 rabbitmq-config",
+			"path": "../packages/rabbitmq-config"
+		},
+		{
+			"name": "crawler",
+			"path": "../services/crawler"
+		},
+		{
 			"name": "scraper",
 			"path": "../services/scraper"
 		},

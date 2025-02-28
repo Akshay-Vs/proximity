@@ -1,16 +1,17 @@
 {
-	"name": "rabbitmq-config",
+	"name": "@proximity/rabbitmq-config",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
+	"main": "config.js",
 	"type": "module",
 	"files": [
 		"dist"
 	],
 	"exports": {
-		"./*": {
-			"import": "./dist/conf/index.mjs",
-			"types": "./dist/conf/index.d.ts"
+		".": {
+			"import": "./dist/config.mjs",
+			"require": "./dist/config.cjs",
+			"types": "./dist/config.d.ts"
 		}
 	},
 	"scripts": {
