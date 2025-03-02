@@ -1,11 +1,13 @@
 import withSerwistInit from '@serwist/next';
+import type { NextConfig } from 'next';
 
 const withSerwist = withSerwistInit({
   swSrc: 'app/sw.ts',
   swDest: 'public/sw.js',
 });
 
-const nextConfig = {
+const nextConfig: NextConfig = {
+  output: 'standalone' as const,
   images: {
     remotePatterns: [
       {
@@ -18,7 +20,6 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
-
     ]
   }
 };
