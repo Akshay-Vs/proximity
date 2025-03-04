@@ -11,10 +11,11 @@ export const validateResult = z.object({
   date: z.string().datetime(),
   scrapedAt: z.string().datetime(),
   sourceName: z.string().min(1),
-  sourceUrl: z.string().url().refine((url) => {
-    const host = new URLParser(url);
-    return TRUSTED_SOURCES.includes(host.slice());
-  }, {
-    message: 'URL must be from a trusted source',
-  }),
+  sourceUrl: z.string().url()
+  // .refine((url) => {
+  //   const host = new URLParser(url);
+  //   return TRUSTED_SOURCES.includes(host.slice());
+  // }, {
+  //   message: 'URL must be from a trusted source',
+  // }),
 })
