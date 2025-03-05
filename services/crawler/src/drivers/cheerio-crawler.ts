@@ -48,7 +48,7 @@ export class CheerioCrawler {
       const links = await this.extractLinks(html);
       const excluded = links
         .filter(link => link.includes(matcher))
-        .filter(link => !link.includes(exclude));
+        .filter(link => exclude ? !link.includes(exclude) : true);
 
       return await this.postProcess(excluded, base);
     } catch (error) {

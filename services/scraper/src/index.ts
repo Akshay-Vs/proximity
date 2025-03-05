@@ -1,13 +1,14 @@
-import { fastify } from "./server";
+import { logger } from "./libs/logger";
+import { ScraperService } from "./scraper";
 
 (async () => {
   try {
-    await fastify.listen({ port: 8001 })
-
-    console.log("Server listening on port 8001")
+    logger.info("Booting up scraper service...")
+    const scraperService = new ScraperService();
+    scraperService.scrape();
+    logger.info("Scraping complete")
   }
   catch (error) {
-    fastify.log.error(error)
-    process.exit(1)
+    logger.error(error)
   }
 })()

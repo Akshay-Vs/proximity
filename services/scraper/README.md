@@ -1,20 +1,17 @@
-# Scraper Service
+# Scraper Service v2.0
 
 ## Overview
 
-![diagram](https://github.com/user-attachments/assets/548de8e5-3f08-4ec1-9850-d87dee0f774c)
+The **Scraper Service v2.0** is a message-driven web scraper that extracts news articles from trusted sources. It operates on an **event-driven architecture** using RabbitMQ for asynchronous job processing, replacing the previous Fastify-based API. This allows scalable, resilient, and efficient scraping.
 
-The **Scraper Service** is a lightweight and efficient Fastify-based server designed to scrape news articles from trusted sources. The server uses Puppeteer & Cheerio for web scraping and validates data to ensure content quality and security.
+### New Features in v2.0
 
-### Features
-
-- **Fastify Framework**: High-performance and flexible HTTP server.
-- **Rate Limiting**: Prevent abuse with request throttling.
-- **Compression**: Optional response compression for optimized performance.
-- **Trusted Source Validation**: Only scrape content from whitelisted domains.
-- **Content Sanitization**: Mitigates XSS risks with content sanitization.
-- **Puppeteer Integration**: Automated browser operations for precise data extraction.
-- **Cheerio Integration**: Fast and efficient static HTML parsing capabilities.
+- **RabbitMQ-based Event-Driven Processing**: Fully decoupled from HTTP requests, handling jobs via message queues.
+- **Retry Mechanism**: Automatic retries with exponential backoff for failed scrape attempts.
+- **Batch Processing**: Efficient batch processing of multiple URLs, reducing system load.
+- **Graceful Shutdown**: Proper cleanup and signal handling for smooth operation.
+- **Enhanced Validation**: Strict validation for incoming messages using Zod schemas.
+- **Improved Logging**: Structured logs for better debugging and observability (pino based logger).
 
 ---
 
@@ -22,9 +19,10 @@ The **Scraper Service** is a lightweight and efficient Fastify-based server desi
 
 ### Prerequisites
 
-- **Node.js** (v16+)
-- **npm** or **yarn**
-- Puppeteer dependencies (install as per your OS requirements)
+- **Node.js** (v18+)
+- **pnpm**
+- **RabbitMQ** (Running instance required)
+- **Puppeteer dependencies** (Install as per OS requirements)
 
 ### Steps
 
@@ -41,124 +39,139 @@ The **Scraper Service** is a lightweight and efficient Fastify-based server desi
    npm install
    ```
 
-3. Set up trusted sources in `libs/trusted-sources`.
+3. RabbitMQ configuration `@proximity/config/rabbitmq.json`:
+
+   ```json
+   {
+   	"url": "amqp://localhost",
+   	"queues": {
+   		"CrawledURLQueue": "scraper_crawled",
+   		"ScrapedNewsQueue": "scraper_results"
+         ...
+   	}
+   }
+   ```
+
+4. Set up trusted sources in `libs/trusted-sources.ts`.
+
+---
+
+## Architecture
+
+The scraper operates entirely through **RabbitMQ message queues**:
+
+- **CrawledURLQueue** → Receives URLs to scrape
+- **Scraper Service** → Listens to the queue, processes scraping jobs
+- **ScrapedNewsQueue** → Stores processed results
+
+```
+               ┌───────────────────────┐
+               │   Producer Service    │
+               │  (URL Crawler)        │
+               └──────────┬────────────┘
+                          ↓
+               ┌───────────────────────┐
+               │    CrawledURLQueue    │
+               └──────────┬────────────┘
+                          ↓
+               ┌───────────────────────┐
+               │    Scraper Service    │
+               │  (Cheerio/Puppeteer)  │
+               └──────────┬────────────┘
+                          ↓
+               ┌───────────────────────┐
+               │    ScrapedNewsQueue   │
+               └──────────┬────────────┘
+                          ↓
+               ┌───────────────────────┐
+               │  Consumer Services    │
+               │  (Generate Summery)   │
+               └───────────────────────┘
+```
 
 ---
 
 ## Usage
 
-### Start the Server
+### Producing Scrape Jobs
 
-Run the server:
+To trigger a scraping job, publish a message to `CrawledURLQueue`:
 
-```bash
-npm start
+```json
+{
+	"url": "https://example.com/article",
+	"driver": "cheerio"
+}
 ```
 
-By default, the server listens on `http://localhost:3000`.
+- `url`: The news article URL (must be from a trusted source).
+- `driver`: `cheerio` (default) for static content or `puppeteer` for dynamic content.
 
-### Endpoints
+### Consuming Scraped Data
 
-#### **GET /**
+The results are published to `ScrapedNewsQueue`:
 
-- **Description**: Health check endpoint.
-- **Response**:
-  ```json
-  {
-  	"service": "scraper",
-  	"status": "running",
-  	"version": "0.0.1",
-  	"message": "I scrape the news"
-  }
-  ```
-
-#### **POST /scrape**
-
-- **Description**: Scrapes the specified news article URL.
-- **Request Body**:
-
-  ```json
-  {
-     "url": "https://example.com/article",
-     "driver" : "cheerio"
-  }
-  ```
-
-  - The `url` must:
-    - Be a valid URL.
-    - Belong to a trusted source.
-   
-   - The `driver` must:
-      - Be `cheerio` or `puppeteer`
-      - defaults to `cheerio` which is significantly faster for static pages
-      - use `puppeteer` to scrape dynamic, client-side rendered web pages   
-
-- **Response**:
-
-  ```json
-  {
-  	"title": "Article Title",
-  	"imageUrl": "https://example.com/image.jpg",
-  	"sourceName": "example",
-  	"sourceUrl": "https://example.com/article",
-  	"date": "2025-01-01T00:00:00Z",
-  	"scrapedAt": "2025-01-15T12:00:00Z",
-  	"content": "The full article content..."
-  }
-  ```
-
-- **Error Responses**:
-  - `400 Bad Request`: Validation errors (e.g., URL not trusted).
-  - `500 Internal Server Error`: Scraping or internal issues.
+```json
+{
+	"title": "Article Title",
+	"imageUrl": "https://example.com/image.jpg",
+	"sourceName": "example",
+	"sourceUrl": "https://example.com/article",
+	"date": "2025-01-01T00:00:00Z",
+	"scrapedAt": "2025-01-15T12:00:00Z",
+	"content": "The full article content..."
+}
+```
 
 ---
 
 ## Core Components
 
-### **Server**
+### **Scraper Workers**
 
-- Built with Fastify.
-- Implements rate limiting and compression for optimal performance and security.
+- **Puppeteer**: Automates browser tasks for dynamic content scraping.
+- **Cheerio**: Parses static HTML for faster scraping.
+- **Retries**: Failed jobs are retried up to `MAX_RETRIES` times.
 
-### **Scraper**
+### **RabbitMQ Integration**
 
-- Extends Puppeteer to handle browser tasks like fetching titles, content, and metadata.
-- Includes robust validation to ensure data accuracy.
+- **CrawledURLQueue** → Accepts URLs for scraping.
+- **ScrapedNewsQueue** → Stores processed articles.
 
 ---
 
 ## Security
 
-1. **Rate Limiting**:
-   - Limits each client to 50 requests per minute.
-2. **Content Sanitization**:
-   - Uses `xss` to clean scraped content.
-3. **Trusted Sources**:
-   - Only allows URLs from predefined trusted domains.
+1. **Rate Limiting**: Prevents abuse by controlling message flow.
+2. **Content Sanitization**: Uses `xss` library to clean scraped content.
+3. **Trusted Sources Only**: Rejects unverified URLs to prevent scraping malicious sites.
 
 ---
 
 ## Development
 
-### Run Locally
+### Run Scraper Worker Locally
 
-Start the development server:
+Start the scraper service (ensure RabbitMQ is running):
 
 ```bash
-npm run dev
+npm start
 ```
+
+The service will listen for messages on `CrawledURLQueue`, process them, and publish results to `ScrapedNewsQueue`.
 
 ---
 
 ## Future Enhancements
 
-- [] Add more validation schemas.
-- [] Improve error handling and logging.
-- [] Support scraping additional metadata (e.g., tags, authors).
-- [] Add CI/CD integration for seamless deployment.
+- [ ] Implement Circuit Breaker pattern for better fault tolerance.
+- [ ] Add monitoring and metrics for queue performance.
+- [ ] Extend support for additional scraping heuristics.
 
 ---
 
 ## License
 
 This project is part of Proximity, licensed under the **MIT License**.
+
+---

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: nextjs
-          image: nextjs-app
+          image: proximity-web
           ports:
             - containerPort: 3000
           env:

@@ -2,10 +2,11 @@ import * as cheerio from 'cheerio';
 import axios from 'axios';
 import z from 'zod';
 
-import URLParser from '@/libs/url-parser';
-import { sanitise } from '@/libs/sanitise';
-import { validateResult } from '@/schema/validate-result';
-import { findFirstTimeStamp } from '@/libs/find-time-stamp';
+import URLParser from '@/src/libs/url-parser';
+import { sanitise } from '@/src/libs/sanitise';
+import { validateResult } from '@/src/schema/validate-result';
+import { findFirstTimeStamp } from '@/src/libs/find-time-stamp';
+import { logger } from '../libs/logger';
 
 export class CheerioScraper {
   private async fetchPage(url: string): Promise<string> {
@@ -16,27 +17,27 @@ export class CheerioScraper {
         },
         timeout: 10000 // 10 second timeout
       });
-      if (response.data) console.log("Successfully fetched page");
+      if (response.data) logger.info("Successfully fetched page");
       return response.data;
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error(`Failed to fetch page: ${error.message}`);
+        logger.error(`Failed to fetch page: ${error.message}`);
         throw new Error(`Failed to fetch page: ${error.message}`);
       } else {
-        console.error(`Failed to fetch page: ${String(error)}`);
+        logger.error(`Failed to fetch page: ${String(error)}`);
         throw new Error('Failed to fetch page: Unknown error');
       }
     }
   }
 
   private extractTitle($: cheerio.Root): string | null {
-    console.log("Extracting title...");
+    logger.info("Extracting title...");
     const heading = $('h1').first();
     return heading.length ? heading.text().replace('\n', '').trim() : null;
   }
 
   private extractContent($: cheerio.Root): string {
-    console.log("Extracting content...");
+    logger.info("Extracting content...");
     const paragraphs = $('p')
       .map((_, element) => $(element).text().trim())
       .get()
@@ -47,7 +48,7 @@ export class CheerioScraper {
   }
 
   private extractImageUrl($: cheerio.Root, url: URLParser): string | null {
-    console.log("Extracting image URL...");
+    logger.info("Extracting image URL...");
     // First try to find image within article, then fallback to any image
     const image = $('article img').first().length ?
       $('article img').first() :
@@ -65,13 +66,13 @@ export class CheerioScraper {
   }
 
   private async extractDate($: cheerio.Root): Promise<string> {
-    console.log("Extracting date...");
+    logger.info("Extracting date...");
     const pageContent = $('body').text();
     return findFirstTimeStamp(pageContent);
   }
 
   public async scrape(url: URLParser): Promise<z.infer<typeof validateResult> | null> {
-    console.log(`Initializing cheerio scraper: ${url.getURL()}`);
+    logger.info(`Initializing cheerio scraper: ${url.getURL()}`);
 
     try {
       const html = await this.fetchPage(url.getURL());
@@ -110,7 +111,7 @@ export class CheerioScraper {
       });
 
       if (!validatedResult.success) {
-        console.error(validatedResult.error);
+        logger.error(validatedResult.error);
         throw new Error('Failed to validate result');
       }
 
@@ -119,7 +120,7 @@ export class CheerioScraper {
       };
 
     } catch (error) {
-      console.error('Scraping failed:', error instanceof Error ? error.message : String(error));
+      logger.error('Scraping failed:', error instanceof Error ? error.message : String(error));
       throw error;
     }
   }
@@ -134,10 +135,10 @@ export class CheerioScraper {
         return await this.scrape(url);
       } catch (error) {
         if (attempt === maxRetries) {
-          console.error('All retry attempts failed:', error);
+          logger.error('All retry attempts failed:', error);
           throw error;
         }
-        console.warn(`Attempt ${attempt} failed, retrying in ${delayMs}ms...`);
+        logger.warn(`Attempt ${attempt} failed, retrying in ${delayMs}ms...`);
         await new Promise(resolve => setTimeout(resolve, delayMs));
       }
     }

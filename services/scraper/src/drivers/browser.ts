@@ -1,5 +1,6 @@
-import URLParser from "@/libs/url-parser";
+import URLParser from "@/src/libs/url-parser";
 import puppeteer, { Browser as Engine, Page } from "puppeteer";
+import { logger } from "../libs/logger";
 
 export class Browser {
   protected browser: Engine | null = null;
@@ -17,7 +18,7 @@ export class Browser {
         '--disable-setuid-sandbox'
       ],
     });
-    console.log("Browser launched");
+    logger.info("Browser launched");
   }
 
   protected async closeBrowser(): Promise<void> {
@@ -52,10 +53,10 @@ export class Browser {
 
     await page.waitForSelector('h1', { timeout: 10000 });
 
-    page.on('console', msg => console.log('Browser console:', msg.text()));
+    page.on('console', msg => logger.info('Browser console:', msg.text()));
     page.on('requestfailed', req => console.error(`Request failed: ${req.url()} - ${req.failure()?.errorText}`));
 
-    console.log("Page opened successfully");
+    logger.info("Page opened successfully");
     return page;
   }
 

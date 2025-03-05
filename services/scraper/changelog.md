@@ -83,3 +83,57 @@ These changes enhance performance, simplify the code, and improve error handling
 1. **Validation Schema**:
    - Added a new schema for validating the request body.
    - Added a new schema for validating the scraped data.
+
+## version=2.0.0
+
+### Major Changes
+
+1. **RabbitMQ Integration**:
+
+   - Implemented message queue system for resilient scraping operations
+   - Added dead letter queue (DLQ) for failed scraping attempts
+   - Introduced message persistence for reliable recovery
+   - Added consumer acknowledgments for reliable message processing
+
+2. **Batch Processing**:
+   - Added support for processing multiple URLs in a single request
+   - Implemented concurrent batch scraping with configurable concurrency limits
+   - Added progress tracking for batch operations
+   - Introduced bulk result handling
+
+### Performance Improvements
+
+1. **Resource Management**:
+
+   - Implemented browser instance pooling
+   - Added automatic cleanup of stale browser sessions
+   - Optimized memory usage through smart page lifecycle management
+   - Added connection pooling for database operations
+
+2. **Parallel Processing**:
+   - Enhanced parallel scraping with improved concurrency control
+   - Implemented batched database operations
+   - Added rate limiting per domain
+
+### Reliability Enhancements
+
+1. **Error Handling**:
+
+   - Extended retry mechanism with exponential backoff
+   - Added circuit breaker for failing domains
+   - Implemented domain-specific error policies
+   - Enhanced error reporting and diagnostics
+
+2. **Monitoring**:
+   - Added detailed performance metrics
+   - Implemented structured logging
+   - Added health check endpoints
+   - Introduced queue monitoring
+
+### Breaking Changes
+
+1. **API Changes**:
+   - Updated response format to support batch operations
+   - Changed configuration format for queue settings
+   - Updated validation schemas for batch requests
+   - Modified error response structure

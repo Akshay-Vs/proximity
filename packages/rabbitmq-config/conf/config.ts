@@ -4,9 +4,9 @@ const MQ = {
   queues: {
     CrawledURLQueue: 'crawler-queue',
     ScrapedNewsQueue: 'scraper-queue',
-    SummerizerPriorityQueue: 'summerizer-priority-queue',
-    SummerizerNonPriorityQueue: 'summerizer-non-priority-queue',
-    SummerizedNewsQueue: 'summerizer-completed-queue',
+    SummarizerPriorityQueue: 'summarizer-priority-queue',
+    SummarizerNonPriorityQueue: 'summarizer-non-priority-queue',
+    SummarizedNewsQueue: 'summarizer-completed-queue',
   }
 }
 

@@ -87,5 +87,7 @@ Proximity is a highly scalable, event-driven system designed for AI-powered news
 
 - Expand AI model capabilities for multi-lingual summarization.
 - Implement real-time push notifications via WebSockets or Firebase.
+- Vectorization
+- Recomendation
 
 ---
