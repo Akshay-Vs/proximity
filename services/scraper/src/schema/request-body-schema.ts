@@ -1,12 +1,16 @@
 import z, { array } from "zod";
 
-import URLParser from "@/libs/url-parser";
-import { TRUSTED_SOURCES } from "@/libs/trusted-sources";
+import URLParser from "@/src/libs/url-parser";
+import { TRUSTED_SOURCES } from "@/src/libs/trusted-sources";
 
-const requestBody = z.object({
+export const provider = z.object({
   url: z.string().url().refine(url => {
     const host = new URLParser(url);
-    return TRUSTED_SOURCES.includes(host.slice());
+    return TRUSTED_SOURCES.includes(
+      host
+        .getHost()
+        .replace('www.', '')
+    );
   }, {
     message: 'URL must be from a trusted source',
   }),
@@ -14,5 +18,5 @@ const requestBody = z.object({
 });
 
 export const requestBodySchema = z.object({
-  providers: z.array(requestBody)
+  providers: z.array(provider)
 })
