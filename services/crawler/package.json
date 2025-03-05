@@ -12,18 +12,21 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"@types/node": "^22.13.5",
+		"@proximity/rabbitmq-config": "workspace:*",
+		"amqplib": "^0.10.5",
 		"axios": "^1.7.9",
 		"cheerio": "^1.0.0",
-		"puppeteer": "^24.2.1",
-		"typescript": "^5.7.3"
+		"puppeteer": "^24.2.1"
 	},
 	"devDependencies": {
+		"@types/node": "^22.13.5",
 		"@proximity/eslint-config": "workspace:*",
 		"@proximity/typescript-config": "workspace:*",
+		"@types/amqplib": "^0.10.7",
 		"nodemon": "^3.1.9",
 		"ts-node": "^10.9.2",
-		"tsup": "^8.3.5"
+		"tsup": "^8.3.5",
+		"typescript": "^5.7.3"
 	},
 	"tsupConfig": {
 		"tsconfig": "tsconfig.json"
