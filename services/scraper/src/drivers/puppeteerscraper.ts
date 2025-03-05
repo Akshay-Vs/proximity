@@ -1,16 +1,17 @@
 import { Page } from "puppeteer";
 import z from "zod";
 
-import URLParser from "@/libs/url-parser";
+import URLParser from "@/src/libs/url-parser";
 
-import { sanitise } from "@/libs/sanitise";
-import { validateResult } from "@/schema/validate-result";
-import { findFirstTimeStamp } from "@/libs/find-time-stamp";
-import { Browser } from "@/src/browser";
+import { sanitise } from "@/src/libs/sanitise";
+import { validateResult } from "@/src/schema/validate-result";
+import { findFirstTimeStamp } from "@/src/libs/find-time-stamp";
+import { Browser } from "@/src/drivers/browser";
+import { logger } from "../libs/logger";
 
 export class PuppeteerScraper extends Browser {
   private async extractTitle(page: Page): Promise<string | null> {
-    console.log("Extracting title...");
+    logger.info("Extracting title...");
     return page.evaluate(() => {
       const heading = document.querySelector('h1')
       const title = heading?.textContent
@@ -19,7 +20,7 @@ export class PuppeteerScraper extends Browser {
   }
 
   private async extractContent(page: Page): Promise<string> {
-    console.log("Extracting content...");
+    logger.info("Extracting content...");
     const extractedContent = await page.evaluate(() => {
       const content = document.querySelectorAll('p');
       const contentText = Array.from(content).map(p => p.textContent?.trim()).filter(Boolean).join(' ');
@@ -30,7 +31,7 @@ export class PuppeteerScraper extends Browser {
   }
 
   private async extractImageUrl(page: Page, url: URLParser): Promise<string | null> {
-    console.log("Extracting image URL...");
+    logger.info("Extracting image URL...");
     return page.evaluate((baseUrl) => {
       const image = document.querySelector('article img');
       const imageUrl = image?.getAttribute('src');
@@ -45,7 +46,7 @@ export class PuppeteerScraper extends Browser {
   }
 
   private async extractDate(page: Page): Promise<string> {
-    console.log("Extracting date...");
+    logger.info("Extracting date...");
     const pageData = await page.evaluate(() => {
       return document.body.textContent || ''; // Get page content
     });
@@ -87,12 +88,18 @@ export class PuppeteerScraper extends Browser {
     });
 
     if (!validatedResult.success) {
-      console.error(validatedResult.error);
+      logger.info(validatedResult.error);
       throw new Error('Failed to validate result')
     }
 
     return {
       ...validatedResult.data,
     }
+  }
+
+  public async cleanup(): Promise<void> {
+    await this.closeBrowser();
+    logger.info('Browser closed');
+    return
   }
 }
