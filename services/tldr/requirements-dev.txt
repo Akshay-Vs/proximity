@@ -1,0 +1,2 @@
+# Development Dependencies
+black>=22.3.0

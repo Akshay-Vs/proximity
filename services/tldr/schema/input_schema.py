@@ -3,8 +3,13 @@ from jsonschema import validate
 input_schema = {
     "type": "object",
     "properties": {
-        "headline": {"type": "string"},
-        "article_text": {"type": "string"},
+        "title": {"type": "string"},
+        "content": {"type": "string"},
+        "imageUrl": {"type": "string"},
+        "date": {"type": "string"},
+        "scrapedAt": {"type": "string"},
+        "sourceName": {"type": "string"},
+        "sourceUrl": {"type": "string"},
     },
-    "required": ["headline", "article_text"],
+    "required": ["title", "content"],
 }

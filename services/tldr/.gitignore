@@ -2,3 +2,5 @@ models/
 __pycache__/
 *.cache/
 *.pyc
+*.env
+.env
