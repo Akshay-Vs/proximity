@@ -25,9 +25,4 @@ subprocess.run(
     ]
 )
 
-# Install the llama_cpp_agent package
-subprocess.check_call(
-    [sys.executable, "-m", "pip", "install", "-r", "requirements.txt"]
-)
-
 print("Setup completed successfully.")
