@@ -1,4 +1,4 @@
-# Use a smaller base image to reduce attack surface
+# Smaller base image to reduce attack surface
 FROM python:3.13-slim
 
 # Set environment variables for security & performance
@@ -16,7 +16,7 @@ WORKDIR /code
 # Use root temporarily for dependency installation
 USER root
 
-# Install system dependencies (e.g., for RabbitMQ, FastAPI, etc.)
+# Install system dependencies (e.g., for RabbitMQ, Llama, etc.)
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     build-essential \
@@ -30,6 +30,12 @@ RUN apt-get update && \
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
+
+
+# Remove build tools to reduce image size
+RUN apt-get purge -y git cmake && \
+    apt-get autoremove -y && \
+    rm -rf /root/.cache
 
 # Copy application files
 COPY . .
