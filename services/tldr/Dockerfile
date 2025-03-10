@@ -41,7 +41,7 @@ RUN chown -R appuser:appuser /code
 USER appuser
 
 # Download the LLM model at build time
-RUN python setup.py
+RUN python ./scripts/setup.py
 
 # Set a more efficient entrypoint
 ENTRYPOINT ["python", "-u", "main.py"]
