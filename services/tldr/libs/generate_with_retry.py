@@ -74,6 +74,7 @@ async def generate_with_retry(
     Raises:
         Exception: If an error occurs during the generation process.
     """
+
     if current_attempt > max_retries:
         logger.warning(f"Max retries reached ({max_retries})")
         return None
@@ -82,16 +83,17 @@ async def generate_with_retry(
         logger.info(
             f"Generating response (attempt {current_attempt + 1}/{max_retries + 1})..."
         )
-        generated_chunks = []
 
-        async for chunk in model.generate_response(
-            "Article to Summarize: " + prompt
-        ).__aiter__():
-            if isinstance(chunk, bytes):
-                chunk = chunk.decode("utf-8")
-            generated_chunks.append(chunk)
+        # Get complete response
+        response_text = await model.generate_response("Article to Summarize: " + prompt)
 
-        response = await parse_response(generated_chunks)
+        if isinstance(response_text, bytes):
+            response_text = response_text.decode("utf-8")
+
+        logger.info(f"Raw response: {response_text}")
+
+        # Parse and validate response
+        response = await parse_response([response_text])
         await validate_response(response)
 
         logger.info("Response validation successful")
@@ -102,7 +104,6 @@ async def generate_with_retry(
         print(f"Retrying ({current_attempt + 1}/{max_retries})...")
 
         error_prompt = ERROR_TEMPLATE + prompt
-
         print(error_prompt)
 
         return await generate_with_retry(
