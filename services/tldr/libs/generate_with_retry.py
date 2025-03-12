@@ -16,7 +16,7 @@ We Couldn't generate a summary because the response wasn't in the correct JSON f
 
 Expected JSON format:
 {
-  "headline": "SEO-friendly headline of the article",
+  "title": "SEO-friendly headline of the article",
   "summary": "Summary of the article",
   "tags": ["tag1", "tag2", "tag3"]
 }
