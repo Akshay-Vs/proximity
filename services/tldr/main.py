@@ -7,7 +7,7 @@ from jsonschema import Draft7Validator
 from schema.input_schema import input_schema
 from libs.generate_with_retry import generate_with_retry
 from libs.model import load_llm
-from libs.mq import ScrapedNewsQueue, host
+from libs.mq import ScrapedNewsQueue, host, SummarizedNewsQueue
 from libs.rabbitmq_client import RabbitMQAsyncClient
 
 
@@ -26,14 +26,14 @@ class SummarizerService:
         for sig in (signal.SIGINT, signal.SIGTERM):
             signal.signal(sig, self._handle_shutdown_signal)
 
+    async def load_model(self):
+        self.model = load_llm(self.model_path)
+        logging.info("LLM Model Loaded Successfully")
+
     def _handle_shutdown_signal(self, sig, frame):
         """Handle signals for graceful shutdown"""
         logging.info(f"Received signal {sig}. Initiating graceful shutdown...")
         self.stop_event.set()
-
-    async def load_model(self):
-        self.model = load_llm(self.model_path)
-        logging.info("LLM Model Loaded Successfully")
 
     async def _connect_with_backoff(self, host):
         """Connect to RabbitMQ with exponential backoff"""
@@ -91,48 +91,7 @@ class SummarizerService:
                     logging.critical("Max retry attempts reached. Giving up.")
                     return False
 
-    async def setup_consumer(self, host, queue_name):
-        # Connect with exponential backoff instead of hardcoded wait
-        connection_success = await self._connect_with_backoff(host)
-        if not connection_success:
-            logging.error("Failed to connect to RabbitMQ. Exiting.")
-            return
-
-        # Ensure we have an open channel before setting up consumer
-        if not (
-            hasattr(self.client, "channel")
-            and self.client.channel
-            and self.client.channel.is_open
-        ):
-            logging.error("Cannot set up consumer - channel not open")
-            return
-
-        # Set up consumer
-        try:
-            await self.client.setup_consumer(queue_name, self.generate)
-            logging.info(f"Consumer set up for queue: {queue_name}")
-
-            # Verify consumer was set up correctly
-            # This might need to be adjusted based on your RabbitMQAsyncClient implementation
-            if not hasattr(self.client, "consumer_tag"):
-                logging.warning(
-                    "Consumer might not be properly registered - no consumer tag found"
-                )
-
-            # Run until stop event is set
-            while not self.stop_event.is_set():
-                await asyncio.sleep(1)  # Check for stop event periodically
-
-            logging.info("Stop event detected, shutting down...")
-        except Exception as e:
-            logging.error(f"Error setting up consumer: {str(e)}")
-        finally:
-            if self.client:
-                await self.client.close()
-                logging.info("RabbitMQ connection closed")
-
-    async def generate(self, body):
-        logging.info(f"Received message: {body}...")
+    async def _generate(self, body):
         try:
             # Parse the body if it's bytes
             if isinstance(body, bytes):
@@ -155,17 +114,23 @@ class SummarizerService:
                 return None
 
             # Generate the response
-            json_input = json.dumps(body_decoded)
-            logging.info(f"Generating response for input: {json_input[:100]}...")
-            generated_response = await generate_with_retry(self.model, json_input)
+            prompt_input = json.dumps(
+                {
+                    "title": body_decoded.get("title"),
+                    "content": body_decoded.get("content"),
+                }
+            )
+            logging.info(f"Generating response for input: {prompt_input[:100]}...")
+            generated_response = await generate_with_retry(self.model, prompt_input)
 
             # Check if the response is valid
+            print("generated Summery: ", generated_response)
             if (generated_response is None) or (generated_response == ""):
                 logging.error("Error generating response: empty response")
                 return None
 
-            logging.info(f"Generated valid response: {generated_response[:100]}...")
-            return generated_response
+            logging.info(f"Generated valid response: {generated_response}")
+            return json.dumps(generated_response)
 
         except json.JSONDecodeError as e:
             logging.error(f"JSON decode error: {str(e)}")
@@ -173,6 +138,65 @@ class SummarizerService:
         except Exception as e:
             logging.error(f"Error in generate: {str(e)}")
             return None
+
+    async def _publish_message(self, message, queue_name):
+        try:
+            await self.client.publish_message(
+                exchange="", routing_key=queue_name, message=message
+            )
+            logging.info(f"Published {message} to {queue_name}")
+        except Exception as e:
+            logging.error(f"Error publishing response: {str(e)}")
+
+    async def _generate_and_publish(self, body, channel, method):
+        logging.info(f"Received message to generate...")
+        response = await self._generate(body)
+        if response:
+            await self._publish_message(response, SummarizedNewsQueue)
+            return channel.basic_ack(delivery_tag=method.delivery_tag)
+
+        logging.error("Error generating response. pushing to retry queue")
+        return channel.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
+
+    async def start_service(self, host, queue_name):
+        # Connect with exponential backoff instead of hardcoded wait
+        connection_success = await self._connect_with_backoff(host)
+        if not connection_success:
+            logging.error("Failed to connect to RabbitMQ. Exiting.")
+            return
+
+        # Ensure we have an open channel before setting up consumer
+        if not (
+            hasattr(self.client, "channel")
+            and self.client.channel
+            and self.client.channel.is_open
+        ):
+            logging.error("Cannot set up consumer - channel not open")
+            return
+
+        # Set up consumer
+        try:
+            await self.client.setup_consumer(queue_name, self._generate_and_publish)
+            logging.info(f"Consumer set up for queue: {queue_name}")
+
+            # Verify consumer was set up correctly
+            # This might need to be adjusted based on your RabbitMQAsyncClient implementation
+            if not hasattr(self.client, "consumer_tag"):
+                logging.warning(
+                    "Consumer might not be properly registered - no consumer tag found"
+                )
+
+            # Run until stop event is set
+            while not self.stop_event.is_set():
+                await asyncio.sleep(1)  # Check for stop event periodically
+
+            logging.info("Stop event detected, shutting down...")
+        except Exception as e:
+            logging.error(f"Error setting up consumer: {str(e)}")
+        finally:
+            if self.client:
+                await self.client.close()
+                logging.info("RabbitMQ connection closed")
 
     async def shutdown(self):
         """Gracefully shutdown the service"""
@@ -190,11 +214,10 @@ if __name__ == "__main__":
         service = SummarizerService("./models/Llama-3.2-1B-Instruct-Q4_K_M.gguf")
 
         try:
-            # First load the model
+            # load the model
             await service.load_model()
-
-            # Then set up the consumer
-            await service.setup_consumer(host, ScrapedNewsQueue)
+            # set up the consumer
+            await service.start_service(host, ScrapedNewsQueue)
         except KeyboardInterrupt:
             logging.info("Keyboard interrupt received")
             await service.shutdown()
