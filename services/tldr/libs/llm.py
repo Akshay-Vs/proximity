@@ -19,14 +19,14 @@ Critical Format Requirement:
 Example Input:
 
 {
-  "headline": "<headline>",
-  "article_text": "<article_text>"
+  "title": "<title>",
+  "content": "<content>"
 }
 
 Example Output:
 
 {
-  "headline": "SEO-friendly headline of the article",
+  "title": "SEO-friendly headline of the article",
   "summary": "Summary of the article",
   "tags": ["tag1", "tag2", "tag3"]
 }"""
@@ -42,6 +42,7 @@ class LLM:
         n_gpu_layers=0,
         n_batch=1,
     ):
+
         # Initialize Llama model
         self.llm = Llama(
             model_path=model_path,
@@ -64,22 +65,37 @@ class LLM:
             self.provider,
             system_prompt=sys_prompt,
             predefined_messages_formatter_type=MessagesFormatterType.LLAMA_3,
-            debug_output=False,
+            # debug_output=False,
+            chat_history=None,
         )
 
     async def generate_response(self, prompt):
         """
-        Generate a response using the LlamaCppAgent.
+        Generate a response using the LlamaCppAgent and return complete response.
         :param prompt: The user query or prompt string.
-        :return: An asynchronous generator of responses.
+        :return: The complete response string.
         """
         print(f"Generating response...")
 
-        response = self.agent.get_chat_response(
-            prompt,
-            returns_streaming_generator=True,
-            llm_sampling_settings=self.settings,
-        )
+        try:
+            # Store the system prompt
+            system_prompt = self.agent.system_prompt
 
-        for chunk in response:
-            yield chunk  # Convert sync generator to async
+            # Get response
+            response = self.agent.get_chat_response(
+                prompt,
+                returns_streaming_generator=False,  # Disable streaming
+                llm_sampling_settings=self.settings,
+            )
+
+            return response
+
+        except Exception as e:
+            print(f"Error generating response: {e}")
+            return ""
+
+        finally:
+            # After generating the full response, reset the context
+            self.agent.chat_history = self.agent.chat_history.__class__()
+            # Add back the system prompt
+            self.agent.add_message(role="system", message=system_prompt)

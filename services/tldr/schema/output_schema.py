@@ -3,7 +3,7 @@ from jsonschema import validate
 output_schema = {
     "type": "object",
     "properties": {
-        "headline": {"type": "string"},
+        "title": {"type": "string"},
         "summary": {"type": "string"},
         "tags": {
             "type": "array",
@@ -12,5 +12,5 @@ output_schema = {
             "uniqueItems": True,
         },
     },
-    "required": ["headline", "summary"],
+    "required": ["title", "summary"],
 }
