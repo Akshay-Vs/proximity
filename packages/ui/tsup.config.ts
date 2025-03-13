@@ -18,7 +18,7 @@ export default defineConfig((options: Options) => ({
   onSuccess: async () => {
     console.log("Building Tailwind CSS...");
     try {
-      await execAsync("tailwindcss -i ./src/styles.css -o ./dist/index.css");
+      await execAsync("npx @tailwindcss/cli -i ./src/styles.css -o ./dist/index.css");
       console.log("Tailwind CSS build completed.");
     } catch (error) {
       console.error("Failed to build Tailwind CSS:", error);
