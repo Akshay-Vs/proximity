@@ -7,6 +7,7 @@ import { myMetadata, myViewport } from '@/pwa';
 
 import '@proximity/ui/styles.css';
 import '@/styles/globals.scss';
+import '@/styles/tailwind.css';
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
