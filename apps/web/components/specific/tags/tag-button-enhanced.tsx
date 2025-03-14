@@ -1,12 +1,15 @@
+import { ButtonBase } from '@/types/button';
 import { Button } from '@proximity/ui/shadcn/button';
+import { cn } from '@proximity/ui/utils/cn';
 
-interface TagButtonEnhancedProps {
-	label: string;
-}
-
-const TagButtonEnhanced = ({ label }: TagButtonEnhancedProps) => {
+const TagButtonEnhanced = ({ label, isSelected, isLoading, isDisabled, onClick }: ButtonBase) => {
 	return (
-		<Button variant="tag" className="h-11 px-7 center button__enhanced">
+		<Button
+			variant="tag"
+			className={cn("h-11 px-7 center button__enhanced", isLoading ? "button__enhanced--loading": isSelected ? "button__enhanced--selected" : "button__enhanced--idle")}
+			disabled={isDisabled}
+			onClick={onClick}
+		>
 			<div className="z-10 center gap-2">
 				<svg
 					fill="none"
