@@ -1,12 +1,12 @@
 import { Button } from '@proximity/ui/shadcn/button';
+import { cn } from '@proximity/ui/utils/cn';
 
-interface TagButtonPrimaryProps {
-	label: string;
-}
+import type { ButtonBase } from '@/types/button';
 
-const TagButtonPrimary = ({ label }: TagButtonPrimaryProps) => {
+
+const TagButtonPrimary = ({ label, isSelected, isLoading, onClick }: ButtonBase) => {
 	return (
-		<Button variant="tag" className="h-11 px-7">
+		<Button variant="tag" onClick={onClick}className={cn("h-11 px-7", isLoading? "animate-pulse bg-primary opacity-80 text-white" :isSelected && "bg-primary text-white")}>
 			{label}
 		</Button>
 	);
