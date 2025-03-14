@@ -6,6 +6,7 @@
   --color-background: var(--background);
   --color-stroke: var(--stroke);
   --color-text-secondary: var(--text-secondary);
+  --color-secondary: var(--secondary);
 }
 
 @layer utilities {
