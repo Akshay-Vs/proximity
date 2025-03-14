@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+@plugin "tailwindcss-animate";
+
+@theme {
+  --color-border: #919091;
+  --color-text: #363636;
+}

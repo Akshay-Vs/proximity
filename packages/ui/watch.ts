@@ -19,7 +19,7 @@ const runProcess = (command: string, args: string[]) => {
 // Start tsup and Tailwind in watch mode
 const processes = [
   runProcess("tsup", ["--watch"]),
-  runProcess("tailwindcss", ["-i", "./src/styles.css", "-o", "./dist/index.css", "--watch"]),
+  runProcess("npx @tailwindcss/cli -i ./src/styles.css -o ./dist/index.css --watch"),
 ];
 
 // Keep the main process alive while the subprocesses are running

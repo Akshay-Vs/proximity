@@ -22,13 +22,14 @@ kratos:
 
     serve:
       public:
-        base_url: 'https://proximity.local/kratos/public'
+        base_url: 'http://public.kratos.proximity.local'
         cors:
           enabled: true
           allowed_origins:
-            - https://proximity.local:3000
-            - https://*.proximity.local:3000
             - https://proximity.local
+            - http://proximity.local
+            - http://localhost:3000
+            - https://localhost:3000
           allowed_methods:
             - POST
             - GET
@@ -43,22 +44,23 @@ kratos:
             - Content-Type
             - Set-Cookie
       admin:
-        base_url: 'https://proximity.local/kratos/admin'
+        base_url: 'http://public.kratos.proximity.local/admin'
 
     selfservice:
       methods:
         password:
           enabled: true
 
-      default_browser_return_url: 'https://proximity.local'
+      default_browser_return_url: 'http://local:3000'
       allowed_return_urls:
-        - 'https://proximity.local'
+        - 'http://local:3000'
+        - 'http://proximity.local'
 
       flows:
         login:
-          ui_url: 'https://proximity.local:3000/auth/login'
+          ui_url: 'http://local:3000/auth/login'
         registration:
-          ui_url: 'https://proximity.local:3000/auth/register'
+          ui_url: 'http://local:3000/auth/register'
 
     identity:
       default_schema_id: identity.default
@@ -123,8 +125,8 @@ service:
     port: 80
     name: http
     allowed_origins:
-      - https://proximity.local:3000
-      - https://*.proximity.local:3000
+      - http://local:3000
+      - http://proximity.local
     allowed_methods:
       - POST
       - GET
