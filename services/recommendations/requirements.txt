@@ -1,0 +1,6 @@
+torchtune
+torchao
+faiss-cpu
+torch
+fastapi
+uvicorn
