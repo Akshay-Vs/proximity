@@ -3,13 +3,15 @@ import { create } from 'zustand';
 interface DisplayTopicStore {
 	topic: string;
 	setTopic: (topic: string) => void;
-	isLoading: boolean;
-	setIsLoading: (isLoading: boolean) => void;
+	loading: string;
+	setLoading: (isLoading: string) => void;
 }
 
+const defaultTopic = 'latest';
+
 export const useDisplayTopicStore = create<DisplayTopicStore>((set) => ({
-	topic: '',
-	isLoading: false,
+	topic: defaultTopic,
+	loading: '',
 	setTopic: (topic) => set({ topic }),
-	setIsLoading: (isLoading) => set({ isLoading }),
+	setLoading: (loading) => set({ loading }),
 }));
