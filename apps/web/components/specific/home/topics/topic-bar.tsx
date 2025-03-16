@@ -1,9 +1,10 @@
 'use client';
-import { JSX, useCallback } from 'react';
+import { JSX, useCallback, useMemo } from 'react';
 import TopicButtonEnhanced from './topic-button-enhanced';
 import TopicButtonPrimary from './topic-button-primary';
 import { History } from 'lucide-react';
 import { useDisplayTopicStore } from '@/stores/display-topic-store';
+import GradientOverlays from './gradient-overlay';
 
 interface TopicTag {
 	label: string | JSX.Element;
@@ -40,55 +41,44 @@ const tags: TopicTag[] = [
 ];
 
 const Tags = () => {
-	const {topic, setTopic, loading, setLoading} = useDisplayTopicStore();
+	const { topic, setTopic, loading } = useDisplayTopicStore();
 
 	const selectTag = useCallback(
-		(id: string) => {
-			if (id === topic) return;
-
-			if (loading) {
-				setLoading('');
-			}
-
-			setTopic(id);
-
-			if (id !== 'for-you') return;
-
-			setLoading(id);
-			const timeoutId = setTimeout(() => {
-				setLoading('');
-			}, 3000);
-
-			return () => clearTimeout(timeoutId);
-		},
-		[loading, topic, setTopic, setLoading]
+			(id: string) => {
+					if (id === topic) return;
+					setTopic(id);
+			},
+			[topic, setTopic]
 	);
 
-	const renderTopicButton = (tag: TopicTag) => {
-		const ButtonComponent = tag.enhanced
-			? TopicButtonEnhanced
-			: TopicButtonPrimary;
+	const renderTopicButton = useCallback((tag: TopicTag) => {
+			const ButtonComponent = tag.enhanced
+					? TopicButtonEnhanced
+					: TopicButtonPrimary;
 
-		return (
-			<ButtonComponent
-				key={typeof tag.label === 'string' ? tag.label : tag.id}
-				label={tag.label}
-				onClick={() => selectTag(tag.id)}
-				isSelected={topic === tag.id}
-				isLoading={loading === tag.id}
-			/>
-		);
-	};
+			return (
+					<ButtonComponent
+							key={typeof tag.label === 'string' ? tag.label : tag.id}
+							label={tag.label}
+							onClick={() => selectTag(tag.id)}
+							isSelected={topic === tag.id}
+							isLoading={loading === tag.id}
+					/>
+			);
+	}, [topic, loading, selectTag]);
+
+	const topicButtons = useMemo(() => 
+			tags.map(renderTopicButton),
+			[renderTopicButton]
+	);
 
 	return (
-		<div className="w-full flex justify-center items-center gap-4 relative">
-			<div className="absolute top-0 left-0 w-[7%] z-20 h-full bg-gradient-to-r from-[#ebeced] via-[#ebecedab] to-[#ebeced00]" />
-			<div className="absolute top-0 right-0 w-[7%] z-20 h-full bg-gradient-to-r from-[#ebeced00] via-[#ebecedab] to-[#ebeced]" />
-
-			<div className="flex items-center gap-4 w-full overflow-y-hidden overflow-x-scroll horizontal-scroll padding">
-				{tags.map(renderTopicButton)}
+			<div className="w-full flex justify-center items-center gap-4 relative">
+					<GradientOverlays />
+					<div className="flex items-center gap-4 w-full overflow-y-hidden overflow-x-scroll horizontal-scroll padding">
+							{topicButtons}
+					</div>
 			</div>
-		</div>
 	);
 };
 
