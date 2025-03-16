@@ -25,11 +25,12 @@ const UseLoginForm = () => {
     },
   });
 
-  const initiateLogin = (values: z.infer<typeof loginSchema>) => {
+  const initiateLogin: (values: z.infer<typeof loginSchema>) => void = (values) => {
     startLoading(async () => {
       try {
         const oryApi = await ory.createBrowserLoginFlow({
           returnTo: '',
+          refresh: true
         });
 
         const flow = oryApi.data.id;
@@ -105,5 +106,4 @@ const UseLoginForm = () => {
 
   return { form, router, status, setStatus, loading, startLoading, initiateLogin }
 }
-
 export default UseLoginForm
