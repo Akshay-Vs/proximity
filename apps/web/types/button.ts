@@ -1,5 +1,7 @@
+import { ReactNode } from "react";
+
 interface ButtonBase {
-	label: string;
+	label: string | ReactNode;
 	isSelected?: boolean;
   isLoading?: boolean;
   isDisabled?: boolean;
