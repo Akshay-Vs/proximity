@@ -1,5 +1,5 @@
 'use client';
-import SearchBar from '@/components/shared/search-bar/search-bar';
+import SearchBar from '@/components/shared/input/search-bar';
 import { useSearchStore } from '@/stores/search-store';
 import { useRouter } from 'nextjs-toploader/app';
 import { useEffect } from 'react';
