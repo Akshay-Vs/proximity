@@ -1,10 +1,11 @@
 'use client';
+import NewsCard, {
+	NewsCardProps,
+} from '@/components/shared/news-card/news-card';
+import NewsCardSkeleton from '@/components/shared/news-card/news-card-skeleton';
 import { useEffect, useState } from 'react';
 
-import NewsCard, { NewsCardProps } from '../../../shared/news-card/news-card';
-import NewsCardSkeleton from '../../../shared/news-card/news-card-skeleton';
-
-const NewsGrid = () => {
+const SearchResultsGrid = () => {
 	const [news, setNews] = useState<NewsCardProps[] | 'loading'>([]);
 
 	useEffect(() => {
@@ -21,21 +22,21 @@ const NewsGrid = () => {
 					views: '43k',
 					slug: 'lockheed-martin-challenges-narrative-on-gps-vulnerability-124H8',
 				},
-				{
-					image:
-						'https://utfs.io/f/tCV5HvjhrFj78ppsNbrmDKZ6LVIqCe2WQuHiMNX41BYwsvEd',
-					title: 'India eyes record year for space with 10 planned launches',
-					publishedAt: '5 hours ago',
-					source: 'Space News',
-					views: '28k',
-					slug: 'india-eyes-record-year-for-space-with-10-planned-launches-GJ878G',
-				},
+				// {
+				// 	image:
+				// 		'https://utfs.io/f/tCV5HvjhrFj78ppsNbrmDKZ6LVIqCe2WQuHiMNX41BYwsvEd',
+				// 	title: 'India eyes record year for space with 10 planned launches',
+				// 	publishedAt: '5 hours ago',
+				// 	source: 'Space News',
+				// 	views: '28k',
+				// 	slug: 'india-eyes-record-year-for-space-with-10-planned-launches-GJ878G',
+				// },
 			]);
 		}, 1000);
 	}, []);
 
 	return (
-		<section className="gap-6 px-[5%] pb-6 grid grid-cols-1 w-full h-full">
+		<section className="gap-6 pb-6 grid grid-cols-1 w-full h-full">
 			{news === 'loading'
 				? Array.from({ length: 5 }).map((_, i) => <NewsCardSkeleton key={i} />)
 				: news.map((news) => (
@@ -53,4 +54,4 @@ const NewsGrid = () => {
 	);
 };
 
-export default NewsGrid;
+export default SearchResultsGrid;

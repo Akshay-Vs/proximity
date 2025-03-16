@@ -1,10 +1,10 @@
 'use client';
-import SearchBar from '@/components/shared/search-bar/search-bar';
+import SearchBar from '@/components/shared/input/search-bar';
 import { useSearchStore } from '@/stores/search-store';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 
-const TopicSearch = () => {
+const ExploreBar = () => {
 	const router = useRouter();
 	const { setQuery, query } = useSearchStore();
 	const searchParams = useSearchParams();
@@ -23,4 +23,4 @@ const TopicSearch = () => {
 	);
 };
 
-export default TopicSearch;
+export default ExploreBar;

@@ -2,7 +2,7 @@ import { ButtonBase } from '@/types/button';
 import { Button } from '@proximity/ui/shadcn/button';
 import { cn } from '@proximity/ui/utils/cn';
 
-const TagButtonEnhanced = ({ label, isSelected, isLoading, isDisabled, onClick }: ButtonBase) => {
+const TopicButtonEnhanced = ({ label, isSelected, isLoading, isDisabled, onClick }: ButtonBase) => {
 	return (
 		<Button
 			variant="tag"
@@ -30,9 +30,9 @@ const TagButtonEnhanced = ({ label, isSelected, isLoading, isDisabled, onClick }
 							gradientUnits="userSpaceOnUse"
 							gradientTransform="matrix(16.1326 5.4553 -43.70045 129.2322 1.588 6.503)"
 						>
-							<stop offset=".067" stopColor="#9168C0" />
-							<stop offset=".343" stopColor="#5684D1" />
-							<stop offset=".672" stopColor="#1BA1E3" />
+							<stop offset=".067" stopColor="#ce52ff" />
+							<stop offset=".343" stopColor="#ce52ff" />
+							<stop offset=".672" stopColor="#ce52ff" />
 						</radialGradient>
 					</defs>
 				</svg>
@@ -43,4 +43,4 @@ const TagButtonEnhanced = ({ label, isSelected, isLoading, isDisabled, onClick }
 	);
 };
 
-export default TagButtonEnhanced;
+export default TopicButtonEnhanced;

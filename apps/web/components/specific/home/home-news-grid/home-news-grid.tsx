@@ -1,11 +1,10 @@
 'use client';
-import NewsCard, {
-	NewsCardProps,
-} from '@/components/shared/news-card/news-card';
-import NewsCardSkeleton from '@/components/shared/news-card/news-card-skeleton';
 import { useEffect, useState } from 'react';
 
-const ResultsGrid = () => {
+import NewsCard, { NewsCardProps } from '../../../shared/news-card/news-card';
+import NewsCardSkeleton from '../../../shared/news-card/news-card-skeleton';
+
+const HomeNewsGrid = () => {
 	const [news, setNews] = useState<NewsCardProps[] | 'loading'>([]);
 
 	useEffect(() => {
@@ -13,15 +12,15 @@ const ResultsGrid = () => {
 		// simulate loading
 		setTimeout(() => {
 			setNews([
-				{
-					image:
-						'https://utfs.io/f/tCV5HvjhrFj7e9NgBZxqDOE9pI4s2uQrfZnahoL6R8vM03SV',
-					title: 'Lockheed Martin challenges narrative on GPS vulnerability',
-					publishedAt: '12 hours ago',
-					source: 'CNN',
-					views: '43k',
-					slug: 'lockheed-martin-challenges-narrative-on-gps-vulnerability-124H8',
-				},
+				// {
+				// 	image:
+				// 		'https://utfs.io/f/tCV5HvjhrFj7e9NgBZxqDOE9pI4s2uQrfZnahoL6R8vM03SV',
+				// 	title: 'Lockheed Martin challenges narrative on GPS vulnerability',
+				// 	publishedAt: '12 hours ago',
+				// 	source: 'CNN',
+				// 	views: '43k',
+				// 	slug: 'lockheed-martin-challenges-narrative-on-gps-vulnerability-124H8',
+				// },
 				{
 					image:
 						'https://utfs.io/f/tCV5HvjhrFj78ppsNbrmDKZ6LVIqCe2WQuHiMNX41BYwsvEd',
@@ -36,7 +35,7 @@ const ResultsGrid = () => {
 	}, []);
 
 	return (
-		<section className="gap-6 pb-6 grid grid-cols-1 w-full h-full">
+		<section className="gap-6 px-[5%] pb-6 grid grid-cols-1 w-full h-full">
 			{news === 'loading'
 				? Array.from({ length: 5 }).map((_, i) => <NewsCardSkeleton key={i} />)
 				: news.map((news) => (
@@ -54,4 +53,4 @@ const ResultsGrid = () => {
 	);
 };
 
-export default ResultsGrid;
+export default HomeNewsGrid;
