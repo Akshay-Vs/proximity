@@ -1,13 +1,13 @@
-import ResultsGrid from '@/components/specific/topic/results-grid';
-import TopicSearch from '@/components/specific/topic/topic-search';
+import ExploreBar from '@/components/shared/input/explore-bar';
+import SearchResultsGrid from '@/components/specific/news-grid/search-results-grid';
 import { Suspense } from 'react';
 
 const TopicPages = () => {
 	return (
 		<Suspense>
 			<div className="padding flex flex-col gap-6 full">
-				<TopicSearch />
-				<ResultsGrid />
+				<ExploreBar />
+				<SearchResultsGrid />
 			</div>
 		</Suspense>
 	);

@@ -1,4 +1,4 @@
-import NewsPreview from '@/components/specific/news/preview/news-preview';
+import NewsPreview from '@/components/specific/news-scroll/preview/news-preview';
 
 const StoryPage = () => {
 	return (
