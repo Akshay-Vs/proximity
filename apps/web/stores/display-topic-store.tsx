@@ -3,8 +3,8 @@ import { create } from 'zustand';
 interface DisplayTopicStore {
 	topic: string;
 	setTopic: (topic: string) => void;
-	loading: string;
-	setLoading: (isLoading: string) => void;
+	loading: string | boolean;
+	setLoading: (isLoading: string | boolean) => void;
 }
 
 const defaultTopic = 'latest';
