@@ -1,6 +1,6 @@
 import HomeNewsGrid from '@/components/specific/home/home-news-grid/home-news-grid';
 import ProviderHeader from '@/components/specific/provider/provider-header/provider-header';
-import Tags from '@/components/specific/topics/topic-bar';
+import Tags from '@/components/specific/home/topics/topic-bar';
 
 const ProviderPage = async ({
 	params,

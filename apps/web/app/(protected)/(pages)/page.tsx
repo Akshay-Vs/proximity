@@ -1,6 +1,6 @@
 import Featured from '@/components/specific/home/featured-news/featured';
 import HomeNewsGrid from '@/components/specific/home/home-news-grid/home-news-grid';
-import Tags from '@/components/specific/topics/topic-bar';
+import Tags from '@/components/specific/home/topics/topic-bar';
 
 import testArticle from '@/public/images/image 2.png';
 import ExploreRedirect from '@/components/specific/home/explore-redirect/explore-redirect';
