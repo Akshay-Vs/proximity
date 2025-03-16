@@ -1,6 +1,6 @@
-import Featured from '@/components/specific/news/featured/featured';
-import NewsGrid from '@/components/specific/news/news-grid/news-grid';
-import Tags from '@/components/specific/tags/tags';
+import Featured from '@/components/specific/home/featured-news/featured';
+import HomeNewsGrid from '@/components/specific/home/home-news-grid/home-news-grid';
+import Tags from '@/components/specific/topics/topic-bar';
 
 import testArticle from '@/public/images/image 2.png';
 import ExploreRedirect from '@/components/specific/home/explore-redirect/explore-redirect';
@@ -17,7 +17,7 @@ const Home = () => {
 			<div className="w-full h-full flex flex-col justify-center items-center gap-6 pt-2">
 				<ExploreRedirect />
 				<Tags />
-				<NewsGrid />
+				<HomeNewsGrid />
 			</div>
 		</>
 	);
