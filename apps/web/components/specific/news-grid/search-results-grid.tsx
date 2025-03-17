@@ -15,22 +15,23 @@ const SearchResultsGrid = () => {
 			setNews([
 				{
 					image:
-						'https://utfs.io/f/tCV5HvjhrFj7e9NgBZxqDOE9pI4s2uQrfZnahoL6R8vM03SV',
-					title: 'Lockheed Martin challenges narrative on GPS vulnerability',
+						'https://ko77xaoqa4.ufs.sh/f/tCV5HvjhrFj7IdoJ5zuQoRFHJr4sv5UPGOuXKthkE83bW0i1',
+					title:
+						'SpaceX letter criticizes FAA for “systemic challenges” in launch licensing',
 					publishedAt: '12 hours ago',
-					source: 'CNN',
 					views: '43k',
-					slug: 'lockheed-martin-challenges-narrative-on-gps-vulnerability-124H8',
+					slug: 'spacex-letter-criticizes-faa-for-systemic-challenges-in-launch-licensing-124H8',
+					source: 'CNN',
 				},
-				// {
-				// 	image:
-				// 		'https://utfs.io/f/tCV5HvjhrFj78ppsNbrmDKZ6LVIqCe2WQuHiMNX41BYwsvEd',
-				// 	title: 'India eyes record year for space with 10 planned launches',
-				// 	publishedAt: '5 hours ago',
-				// 	source: 'Space News',
-				// 	views: '28k',
-				// 	slug: 'india-eyes-record-year-for-space-with-10-planned-launches-GJ878G',
-				// },
+				{
+					image:
+						'https://utfs.io/f/tCV5HvjhrFj78ppsNbrmDKZ6LVIqCe2WQuHiMNX41BYwsvEd',
+					title: 'India eyes record year for space with 10 planned launches',
+					publishedAt: '5 hours ago',
+					source: 'Space News',
+					views: '28k',
+					slug: 'india-eyes-record-year-for-space-with-10-planned-launches-GJ878G',
+				},
 			]);
 		}, 1000);
 	}, []);

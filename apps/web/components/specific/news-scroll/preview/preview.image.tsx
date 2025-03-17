@@ -1,11 +1,16 @@
 import Image from 'next/image';
 
-const PreviewImage = () => {
+interface PreviewImageProps {
+	src: string;
+	alt: string;
+}
+
+const PreviewImage = ({src, alt}: PreviewImageProps) => {
 	return (
 		<div className="h-fit w-full absolute top-0 left-0">
 			<Image
-				src="https://ko77xaoqa4.ufs.sh/f/tCV5HvjhrFj7IdoJ5zuQoRFHJr4sv5UPGOuXKthkE83bW0i1"
-				alt="news cover image"
+				src={src}
+				alt={alt}
 				width={720}
 				height={736}
 				className="object-center object-cover top-0 left-0 h-96 w-full"

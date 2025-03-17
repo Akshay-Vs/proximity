@@ -7,25 +7,25 @@ import { useDisplayTopicStore } from '@/stores/display-topic-store';
 
 const HomeNewsGrid = () => {
 	const [news, setNews] = useState<NewsCardProps[] | 'loading'>([]);
-	const {topic, setLoading} = useDisplayTopicStore();
+	const { topic, setLoading } = useDisplayTopicStore();
 
 	useEffect(() => {
 		setNews('loading');
-		setLoading(topic)
+		setLoading(topic);
 
 		// simulate loading delay
 		const timeoutDelay = topic === 'for-you' ? 4000 : 500;
 		setTimeout(() => {
-			
 			setNews([
 				{
 					image:
-						'https://utfs.io/f/tCV5HvjhrFj7e9NgBZxqDOE9pI4s2uQrfZnahoL6R8vM03SV',
-					title: 'Lockheed Martin challenges narrative on GPS vulnerability',
+						'https://ko77xaoqa4.ufs.sh/f/tCV5HvjhrFj7IdoJ5zuQoRFHJr4sv5UPGOuXKthkE83bW0i1',
+					title:
+						'SpaceX letter criticizes FAA for “systemic challenges” in launch licensing',
 					publishedAt: '12 hours ago',
-					source: 'CNN',
 					views: '43k',
-					slug: 'lockheed-martin-challenges-narrative-on-gps-vulnerability-124H8',
+					slug: 'spacex-letter-criticizes-faa-for-systemic-challenges-in-launch-licensing-124H8',
+					source: 'CNN',
 				},
 				{
 					image:
@@ -36,8 +36,17 @@ const HomeNewsGrid = () => {
 					views: '28k',
 					slug: 'india-eyes-record-year-for-space-with-10-planned-launches-GJ878G',
 				},
+				{
+					image:
+						'https://utfs.io/f/tCV5HvjhrFj7e9NgBZxqDOE9pI4s2uQrfZnahoL6R8vM03SV',
+					title: 'Lockheed Martin challenges narrative on GPS vulnerability',
+					publishedAt: '12 hours ago',
+					source: 'CNN',
+					views: '43k',
+					slug: 'lockheed-martin-challenges-narrative-on-gps-vulnerability-124H8',
+				},
 			]);
-			setLoading(false)
+			setLoading(false);
 		}, timeoutDelay);
 	}, [setLoading, topic]);
 

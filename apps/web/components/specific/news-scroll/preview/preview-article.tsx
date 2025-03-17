@@ -1,22 +1,23 @@
-const PreviewArticle = () => {
+import Link from "next/link";
+
+interface PreviewArticleProps {
+	title: string;
+	article: string;
+	tags: string[];
+}
+
+const PreviewArticle = ({ title, article, tags }: PreviewArticleProps) => {
 	return (
 		<>
 			<div className="flex gap-2 w-full">
-				<span>#Space</span>
-				<span>#ElonMusk</span>
-			</div>
+				{tags.map((tag) => (
+					<Link href={`/tag/${tag}`} key={tag}>#{tag}</Link>
+				))}			</div>
 			<h1 className="text-[2rem] font-medium leading-tight tracking-normal">
-				SpaceX letter criticizes FAA for “systemic challenges” in launch
-				licensing
+				{title}
 			</h1>
 
-			<article className="text-[1.24rem]">
-				{`SpaceX is challenging a $633,000 FAA fine for two 2023 launch
-					violations, arguing the changes were minor and didn’t affect safety.
-					The company claims the FAA was slow to approve updates and suggests
-					the fines are politically motivated. CEO Elon Musk vowed to sue but
-					hasn't yet.`}
-			</article>
+			<article className="text-[1.24rem]">{article}</article>
 		</>
 	);
 };
