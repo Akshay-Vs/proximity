@@ -2,6 +2,8 @@ import { ButtonBase } from '@/types/button';
 import { Button } from '@proximity/ui/shadcn/button';
 import { cn } from '@proximity/ui/utils/cn';
 
+import "@/styles/_button.scss";
+
 const TopicButtonEnhanced = ({ label, isSelected, isLoading, isDisabled, onClick }: ButtonBase) => {
 	return (
 		<Button
