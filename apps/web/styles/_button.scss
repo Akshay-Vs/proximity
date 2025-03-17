@@ -1,15 +1,3 @@
-@property --border-angle {
-	syntax: '<angle>';
-	initial-value: 0deg;
-	inherits: false;
-}
-
-@property --gradient-offset {
-	syntax: '<percentage>';
-	initial-value: 0%;
-	inherits: false;
-}
-
 .button {
 	&__enhanced {
 		--border-angle: 0deg;

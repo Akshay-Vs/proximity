@@ -1,29 +1,40 @@
 import { Button } from '@proximity/ui/shadcn/button';
 import { Eye, Bookmark, Share2 } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
-const PreviewFooter = () => {
+interface PreviewFooterProps {
+	reads: string;
+	publishedAt: string;
+	source: {
+		name: string;
+		image: string;
+		url: string;
+	}
+}
+
+const PreviewFooter = ({ reads, publishedAt, source }: PreviewFooterProps) => {
 	return (
 		<div className="flex justify-between items-center">
 			<div className="flex items-center gap-4">
 				<span className="center gap-2">
 					<Eye className="w-4 h-4" />
-					<p>1.2k</p>
+					<p>{reads}</p>
 				</span>
 
 				<span className="center gap-2">
-					<p>12 hours ago</p>
+					<p>{publishedAt}</p>
 				</span>
 
-				<span className="center gap-2 h-6">
+				<Link href={source.url} className="center gap-2 h-6">
 					<Image
-						src="https://ko77xaoqa4.ufs.sh/f/tCV5HvjhrFj7Al0k2KoQ2M0UGsxT3Li1eYlgDhHwnmPkprWI"
-						alt="cnn"
+						src={source.image}
+						alt={source.name}
 						width={24}
 						height={24}
 						className="object-center object-contain h-6 w-6"
 					/>
-				</span>
+				</Link>
 			</div>
 
 			<div className="flex gap-4 items-center">
