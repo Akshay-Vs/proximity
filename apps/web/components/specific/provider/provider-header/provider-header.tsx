@@ -14,7 +14,7 @@ const ProviderHeader = async ({ id }: { id: string }) => {
 						alt="provider avatar"
 						height={48}
 						width={48}
-						className="full object-center object-contain aspect-square brightness-200 contrast-200 max-h-12 max-w-12"
+						className="full object-center object-contain aspect-square brightness-200 contrast-200 min-h-12 min-w-12"
 					/>
 				</div>
 				<div>
