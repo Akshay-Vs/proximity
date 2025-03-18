@@ -56,9 +56,9 @@ const stories = [
 
 const StoryPage = () => {
 	return (
-		<main className="overflow-y-auto overflow-x-hidden snap-y snap-mandatory h-screen w-screen">
+		<main className="overflow-y-auto overflow-x-hidden snap-y snap-mandatory h-screen w-screen transform-gpu">
 			<PreviewHeader />
-			{stories.map((story) => (
+			{stories.map((story, index) => (
 				<NewsPreview
 					key={story.slug}
 					image={story.image}
@@ -68,6 +68,7 @@ const StoryPage = () => {
 					publishedAt={story.publishedAt}
 					source={story.source}
 					reads={story.views}
+					index={index}
 				/>
 			))}
 		</main>
