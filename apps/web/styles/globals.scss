@@ -40,6 +40,12 @@ body {
 	scrollbar-width: none;
 }
 
+.hidden-scroll {
+	-ms-overflow-style: none;
+	-moz-scrollbar-width: none;
+	scrollbar-width: none;
+}
+
 ::-webkit-scrollbar-track {
 	background: #f1f1f1;
 }

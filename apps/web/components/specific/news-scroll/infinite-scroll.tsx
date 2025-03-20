@@ -73,7 +73,7 @@ const InfiniteScroll = () => {
 		}
 	}, [inView]);
 	return (
-		<div className="overflow-y-auto overflow-x-hidden snap-y snap-mandatory h-screen w-screen transform-gpu">
+		<div className="overflow-y-auto overflow-x-hidden snap-y snap-mandatory h-screen w-screen transform-gpu hidden-scroll">
 			<PreviewHeader />
 			{news.map((story, index) => (
 				<NewsPreview
