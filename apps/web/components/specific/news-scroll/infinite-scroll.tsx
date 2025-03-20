@@ -89,7 +89,7 @@ const InfiniteScroll = () => {
 				/>
 			))}
 
-			<div ref={ref} className='h-10 w-10 bg-black -translate-y-[200vh]'/>
+			<div ref={ref} className='h-[200vh] w-10 -translate-y-[200vh]'/>
 		</div>
 	);
 };
