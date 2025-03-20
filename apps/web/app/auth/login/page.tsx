@@ -5,7 +5,7 @@ import FormLogo from '@/components/shared/branding/form-logo/form-logo';
 
 const LoginPage = () => {
 	return (
-		<div className="screen spacing">
+		<div className="h-screen w-full max-w-[800px] center spacing">
 			<FormLogo />
 			<LoginForm />
 			<SocialLogin />
