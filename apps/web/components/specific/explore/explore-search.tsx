@@ -8,13 +8,15 @@ const ExploreSearch = () => {
 	const { query, setQuery } = useSearchStore();
 
 	return (
-		<SearchBar
+		<div className='w-full lg:hidden'>
+			<SearchBar
 			icon="chevron"
 			onIconClick={() => {
 				if (query) setQuery('');
 				else router.push('/');
 			}}
 		/>
+		</div>
 	);
 };
 

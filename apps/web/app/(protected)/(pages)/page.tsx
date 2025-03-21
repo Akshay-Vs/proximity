@@ -5,7 +5,7 @@ import Tags from '@/components/specific/home/topics/topic-bar';
 import testArticle from '@/public/images/image 2.png';
 import ExploreRedirect from '@/components/specific/home/explore-redirect/explore-redirect';
 
-const Home = () => {
+const HomePage = () => {
 	return (
 		<>
 			<Featured
@@ -23,4 +23,4 @@ const Home = () => {
 	);
 };
 
-export default Home;
+export default HomePage;

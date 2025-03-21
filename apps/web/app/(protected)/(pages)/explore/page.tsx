@@ -9,6 +9,7 @@ import ExploreSearchResults from '@/components/specific/explore/explore-search-r
 
 const ExplorePage = () => {
 	return (
+		<>
 		<div className="padding flex flex-col gap-6 full">
 			<ExploreSearch />
 			<ExploreScreenMgr results={<ExploreSearchResults />}>
@@ -17,8 +18,9 @@ const ExplorePage = () => {
 				<RecomendedTopics />
 			</ExploreScreenMgr>
 
-			<ActiveMatrix />
 		</div>
+			<ActiveMatrix />
+		</>
 	);
 };
 
