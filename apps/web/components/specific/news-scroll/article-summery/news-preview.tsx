@@ -22,7 +22,7 @@ interface PreviewProps {
 
 const NewsPreview = ({image, title, article, tags, publishedAt, source, reads, index}:PreviewProps) => {
 	return (
-		<div className={cn("relative screen snap-start snap-always h-screen w-full center overflow-hidden md:max-h-[96vh]", index===0 && "pt-6")}>
+		<div className={cn("relative screen snap-start snap-always h-screen w-full center overflow-hidden md:max-h-[96vh]", index===0 && "lg:pt-6")}>
 			<div className="flex flex-col justify-between items-center h-full w-full md:max-w-[32rem] md:max-h-[94vh] md:rounded-2xl  border-gray-300 border overflow-hidden relative">
 				<PreviewImage src={image} alt={title} />
 

@@ -13,7 +13,7 @@ const ExploreRedirect = () => {
 	}, [setQuery]);
 
 	return (
-		<div className="spacing">
+		<div className="padding w-full lg:hidden">
 			<SearchBar
 				readonly={true}
 				onContainerClick={() => router.push('/explore')}

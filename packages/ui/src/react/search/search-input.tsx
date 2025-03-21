@@ -1,6 +1,7 @@
 'use client';
 import React, { PropsWithChildren, useState } from 'react';
 import { Input } from '../../shadcn/input';
+import { cn } from '@/src/utils/cn';
 
 interface SearchInput
 	extends PropsWithChildren,
@@ -10,6 +11,8 @@ interface SearchInput
 
 	onInputClick?: () => void;
 	onInputKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+
+	after?: React.ReactNode;
 }
 
 const SearchInput = ({
@@ -18,6 +21,8 @@ const SearchInput = ({
 	onInputClick,
 	onInputKeyDown,
 	children,
+	className,
+	after,
 	...rest
 }: SearchInput) => {
 	const [search, setSearch] = useState('');
@@ -39,9 +44,10 @@ const SearchInput = ({
 				value={search}
 				onKeyDown={onInputKeyDown}
 				onClick={onInputClick}
-				className="center leading-none h-9 w-full rounded-none border-none bg-transparent shadow-none md:text-3xl focus:outline-none focus-visible:ring-0 placeholder:text-[#626262] placeholder:font-medium px-0 py-0 disabled:opacity-100 cursor-pointer disabled:cursor-pointer"
+				className={cn("center leading-none h-9 w-full rounded-none border-none bg-transparent shadow-none md:text-3xl lg:text-xl focus:outline-none focus-visible:ring-0 placeholder:text-[#626262] placeholder:font-medium px-0 py-0 disabled:opacity-100 cursor-pointer disabled:cursor-pointer", className)}
 				{...rest}
 			/>
+			{after}
 		</div>
 	);
 };

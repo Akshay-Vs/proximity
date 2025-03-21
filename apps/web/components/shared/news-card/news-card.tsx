@@ -11,8 +11,12 @@ export interface NewsCardProps {
 	title: string;
 	image: string;
 	publishedAt: string;
-	source: string;
-	views: string;
+	source: {
+		name: string;
+		image: string;
+		url: string;
+	};
+	reads: string;
 }
 
 const NewsCard = ({
@@ -21,7 +25,7 @@ const NewsCard = ({
 	image,
 	publishedAt,
 	source,
-	views,
+	reads,
 }: NewsCardProps) => {
 	return (
 		<Link href={`/story/${slug}`} className="h-fit w-full">
@@ -30,8 +34,8 @@ const NewsCard = ({
 				<NewsTitle title={title} />
 
 				<div className="flex justify-between items-center w-full h-4">
-					<NewsSourceInfo publishedAt={publishedAt} source={source} />
-					<NewsViewsCount views={views} />
+					<NewsSourceInfo publishedAt={publishedAt} source={source.name} />
+					<NewsViewsCount views={reads} />
 				</div>
 
 				<Separator className={'mx-4'} />
