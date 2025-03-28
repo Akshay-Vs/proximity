@@ -2,7 +2,7 @@ import torch
 from .rec_1.rec_1 import recommendationModel
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import requests
+import httpx
 import logging
 import os
 
@@ -45,38 +45,33 @@ class JSONData(BaseModel):
     Liked: str
 
 def apply_prompt(d):
-    template = "Head line: {}\nSummery: {}\nLiked: {}"
-    return [template.format(data['NewsTitle'], data['NewsTLDR'], data['Liked']) for data in d]
+    return [f"Head line: {data.NewsTitle}\nSummery: {data.NewsTLDR}\nLiked: {data.Liked}" for data in d]
 
 @app.post("/history/")
 async def recommend(data: list[JSONData]):
     try:
         with torch.no_grad():
             # Generate embeddings
-            input = [{
-                "NewsTitle": d.NewsTitle,
-                "NewsTLDR": d.NewsTLDR,
-                "Liked": d.Liked
-            }for d in data]
-            embed = rec_model(apply_prompt(input))
+            embed = rec_model(apply_prompt(data))
 
-            url = os.getenv("VECTORSTORE_URL", "http://127.0.0.1:8000/search")
+        url = os.getenv("VECTORSTORE_URL", "http://127.0.0.1:8000/search")
 
-            # NOTE: number of news recommending, k = timeseries
-            payload = {
-                "embedding": embed.squeeze(0).tolist(),  # Convert tensor to list for JSON serialization
-                "top_k": timesteps
-            }
+        # NOTE: number of news recommending, k = timeseries
+        payload = {
+            "embedding": embed.squeeze(0).tolist(),  # Convert tensor to list for JSON serialization
+            "top_k": timesteps
+        }
 
-            response = requests.post(url, json=payload)
-            response.raise_for_status()  # Raise an exception for HTTP errors
-
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=payload)
+            response.raise_for_status()
             result = response.json()
-            logger.info("Received response from vector store.")
-            return result
 
-    except requests.RequestException as e:
-        logger.error(f"Error communicating with vector store: {e}")
+        logger.info("Received response from vector store.")
+        return result
+
+    except httpx.HTTPStatusError as e:
+        logger.error(f"HTTP error from vector store: {e}")
         raise HTTPException(status_code=500, detail="Error communicating with vector store")
     except Exception as e:
         logger.error(f"Error in recommendation process: {e}")
