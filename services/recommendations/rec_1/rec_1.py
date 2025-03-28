@@ -4,8 +4,8 @@ from transformers import BertModel, BertTokenizer
 from torchtune.modules import RotaryPositionalEmbeddings
 
 # Load BERT Model and Tokenizer
-tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
-model = BertModel.from_pretrained("bert-base-uncased")
+tokenizer = BertTokenizer.from_pretrained("distilbert-base-uncased")
+model = BertModel.from_pretrained("distilbert-base-uncased")
 
 # Function to get sentence embedding
 def get_embedding(text):
@@ -46,19 +46,19 @@ class LSTMEmbeddingGenerator(nn.Module):
         Returns:
             torch.Tensor: Output embedding of shape (batch_size, output_dim)
         """
-        batch_size, timesteps, head_dim, num_heads = x.shape
+        batch_size, timesteps, _, _ = x.shape
 
         # Flatten last two dimensions (head_dim * num_heads)
-        x = x.view(batch_size, timesteps, head_dim * num_heads)
+        x = x.view(batch_size, timesteps, -1)
 
         # Pass through LSTM
         _, (hn, _) = self.lstm(x)  # hn is (num_layers, batch, hidden_dim)
 
         # Take the last hidden state of the last LSTM layer
-        last_hidden_state = hn[-1]  # Shape: (batch_size, hidden_dim)
+        # last_hidden_state = hn[-1]  # Shape: (batch_size, hidden_dim)
 
         # Project to embedding space
-        embedding = self.fc(last_hidden_state)  # Shape: (batch_size, output_dim)
+        embedding = self.fc(hn[-1])  # Shape: (batch_size, output_dim)
 
         return embedding
 
@@ -86,7 +86,6 @@ class recommendationModel(nn.Module):
         self.num_heads = num_heads
         self.head_dim = head_dim
 
-        self.BERT_embedding = get_embedding
         self.rope = RotaryPositionalEmbeddings(head_dim)
         self.LSTM_embedding = LSTMEmbeddingGenerator(input_dim=head_dim * num_heads,
                                hidden_dim=hidden_dim,
@@ -99,7 +98,7 @@ class recommendationModel(nn.Module):
 
 
         """
-        x = self.BERT_embedding(x)
+        x = get_embedding(x)
 
         x = x.view(self.batch, self.timesteps, self.num_heads, self.head_dim)
 
