@@ -45,8 +45,7 @@ class JSONData(BaseModel):
     Liked: str
 
 def apply_prompt(d):
-    return [f"Head line: {data.NewsTitle}\nSummery: {data.NewsTLDR}\nLiked: {data.Liked}" for data in d]
-
+    return [f"Head line: {data.NewsTitle}\nSummary: {data.NewsTLDR}\nLiked: {data.Liked}" for data in d]
 @app.post("/history/")
 async def recommend(data: list[JSONData]):
     try:
