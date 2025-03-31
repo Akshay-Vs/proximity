@@ -87,8 +87,8 @@ importers:
         specifier: ^1.7.9
         version: 1.8.4
       lucide-react:
-        specifier: ^0.475.0
-        version: 0.475.0(react@19.0.0)
+        specifier: ^0.479.0
+        version: 0.479.0(react@19.0.0)
       next:
         specifier: 15.2.3
         version: 15.2.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.86.0)
@@ -152,7 +152,7 @@ importers:
         version: 8.5.3
       tailwindcss:
         specifier: ^4
-        version: 4.0.15
+        version: 4.0.17
       typescript:
         specifier: ^5.8.2
         version: 5.8.2
@@ -267,11 +267,11 @@ importers:
         specifier: ^8.5.3
         version: 8.5.3
       tailwindcss:
-        specifier: ^4.0.14
-        version: 4.0.15
+        specifier: ^4.0.17
+        version: 4.0.17
       tailwindcss-animate:
         specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@4.0.15)
+        version: 1.0.7(tailwindcss@4.0.17)
 
   packages/typescript-config: {}
 
@@ -326,11 +326,11 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2
       tailwindcss:
-        specifier: ^4.0.13
-        version: 4.0.15
+        specifier: ^4.0.17
+        version: 4.0.17
       tailwindcss-animate:
         specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@4.0.15)
+        version: 1.0.7(tailwindcss@4.0.17)
       tsup:
         specifier: ^8.3.5
         version: 8.4.0(jiti@2.4.2)(postcss@8.5.3)(tsx@4.19.3)(typescript@5.8.2)(yaml@2.7.0)
@@ -3888,6 +3888,11 @@ packages:
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
+  lucide-react@0.479.0:
+    resolution: {integrity: sha512-aBhNnveRhorBOK7uA4gDjgaf+YlHMdMhQ/3cupk6exM10hWlEU+2QtWYOfhXhjAsmdb6LeKR+NZnow4UxRRiTQ==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   make-error@1.3.6:
     resolution: {integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==}
 
@@ -4832,6 +4837,9 @@ packages:
 
   tailwindcss@4.0.15:
     resolution: {integrity: sha512-6ZMg+hHdMJpjpeCCFasX7K+U615U9D+7k5/cDK/iRwl6GptF24+I/AbKgOnXhVKePzrEyIXutLv36n4cRsq3Sg==}
+
+  tailwindcss@4.0.17:
+    resolution: {integrity: sha512-OErSiGzRa6rLiOvaipsDZvLMSpsBZ4ysB4f0VKGXUrjw2jfkJRd6kjRKV2+ZmTCNvwtvgdDam5D7w6WXsdLJZw==}
 
   tapable@2.2.1:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
@@ -8946,6 +8954,10 @@ snapshots:
     dependencies:
       react: 19.0.0
 
+  lucide-react@0.479.0(react@19.0.0):
+    dependencies:
+      react: 19.0.0
+
   make-error@1.3.6: {}
 
   math-intrinsics@1.1.0: {}
@@ -10015,11 +10027,13 @@ snapshots:
 
   tailwind-merge@3.0.2: {}
 
-  tailwindcss-animate@1.0.7(tailwindcss@4.0.15):
+  tailwindcss-animate@1.0.7(tailwindcss@4.0.17):
     dependencies:
-      tailwindcss: 4.0.15
+      tailwindcss: 4.0.17
 
   tailwindcss@4.0.15: {}
+
+  tailwindcss@4.0.17: {}
 
   tapable@2.2.1: {}
 
