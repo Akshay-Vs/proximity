@@ -68,7 +68,7 @@ class RecommendationService:
     # TODO: Improve prompt
     def apply_prompt(self, d):
 
-        template = "Head line: {NewsTitle}\nSummery: {NewsTLDR}\nLiked: {Liked}"
+        template = "Head line: {NewsTitle}\nSummary: {NewsTLDR}\nLiked: {Liked}"
         apply = lambda data: template.format(
             NewsTitle=data.NewsTitle,
             NewsTLDR=data.NewsTLDR,
