@@ -183,10 +183,8 @@ class RecommendationService:
             except Exception as e:
                 retry_count += 1
                 backoff_time = min(
-                    backoff_time = min(
-                        self.BACKOFF_FACTOR**retry_count, self.RETRY_DELAY
-                    )  # Exponential backoff capped at 5 seconds
-
+                    self.BACKOFF_FACTOR**retry_count, self.RETRY_DELAY
+                )  # Exponential backoff capped at 5 seconds
                 logging.error(
                     f"Connection error (attempt {retry_count}/{max_retries}): {str(e)}. "
                     f"Retrying in {backoff_time} seconds..."
