@@ -2,5 +2,5 @@ torchtune==0.5.0
 torchao==0.9.0
 faiss-cpu==1.10.0
 torch>=2.6.0
+python-dotenv>=1.0.0
 pika>=1.3.2 # AMQP client
-python-dotenv>=1.0.0 # For loading environment variables
